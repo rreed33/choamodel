@@ -47,7 +47,7 @@ and then finally:
 *IMPORTANTE NOTE!* It's good practice to pull the latest version every time you work on this project. 
 To do this:
 
-*git checkout [name_of_your_branch]* (go to the master branch that's on your local machine)
+*git checkout master* (go to the master branch that's on your local machine)
 
 *git pull origin master* (pulls files from remote master that's up in the github cloud into the version of master that's on your local machine)
 
