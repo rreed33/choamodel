@@ -33,12 +33,15 @@ def edit(dataframe):
 	dataframe['No_Show'] 		= (dataframe['Appt_Status_ID']==4).astype(int)
 	# print(dataframe.groupby('Sibley_ID', sort='Appt_Date').cumcount())
 
+	dataframe = dataframe.drop(['Encounter_ID','Appt_Date','Appt_Time','Appt_Made_Date',
+                  'Appt_Made_Time','Sibley_ID', 'Dept_Name', 'Dept_Abbr_3', 'Dept_Abbr_4'], axis = 1)
+
+	dataframe.fillna(0, inplace = True)
 
 	#calculate bird eye distance 
 	return dataframe
 
-
-def main(group='all', no_cancel = False):
+def main(group='all', no_cancel = False, one_hot = False):
 	df = pd.read_csv("../data/ENCOUNTERS_RAW.csv")
 	df_dept = pd.read_csv('../data/DEPT_RAW.csv')
 	df = df.merge(df_dept, on = 'Dept_ID') 
@@ -47,17 +50,36 @@ def main(group='all', no_cancel = False):
 	#only look at those with history
 	# df = df[df['count_app'] == 1]
 
+	#determine one hot encoding for variables:
+	if one_hot:
+		# use pd.concat to join the new columns with your original dataframe
+		df = pd.concat([df,pd.get_dummies(df['Dept_ID'], prefix='dept')],axis=1)
+		df = pd.concat([df,pd.get_dummies(df['Provider_ID'], prefix='provider')],axis=1)
+		df = pd.concat([df,pd.get_dummies(df['Appt_Logistics_Type_ID'], prefix='appt_log_type')],axis=1)
+		df = pd.concat([df,pd.get_dummies(df['Visit_Type_ID'], prefix='visit_type')],axis=1)
+		df = pd.concat([df,pd.get_dummies(df['Patient_Age_Bucket_ID'], prefix='age_bucket')],axis=1)
+		df = pd.concat([df,pd.get_dummies(df['Payor_Type_ID'], prefix='payor_type')],axis=1)
+
+		# now drop the original 'country' column (you don't need it anymore)
+		df.drop(['Dept_ID'],axis=1, inplace=True)
+		df.drop(['Provider_ID'],axis=1, inplace=True)
+		df.drop(['Appt_Logistics_Type_ID'],axis=1, inplace=True)
+		df.drop(['Visit_Type_ID'],axis=1, inplace=True)
+		df.drop(['Patient_Age_Bucket_ID'],axis=1, inplace=True)
+		df.drop(['Payor_Type_ID'],axis=1, inplace=True)
+
+
 	#divide the group into historical and nonhistorical patients
 	if group == 'historical':
-		df = df[df['count_app'] > 1]
+		df = df[df['count_app'] >= 1]
 	elif group == 'nonhistorical':
-		df = df[df['count_app'] == 1]
+		df = df[df['count_app'] == 0]
 
 	#get rid of cancellations
 	if no_cancel:
 		df = df[(df['Appt_Status_ID'] == 4) | (df['Appt_Status_ID'] == 2)]
 
-	df[['Payor_Type_ID']] = df[['Payor_Type_ID']].fillna(value=0)
+	#df[['Payor_Type_ID']] = df[['Payor_Type_ID']].fillna(value=0)
 	df = df.drop([ 'Num_Canceled_Encounters_Since',
                        'Num_No_Show_Encounters_Since',
                        'Num_Canceled_Encounters_AllTime',
