@@ -180,7 +180,7 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-model')
+    parser.add_argument('-model', default = 'rf')
     parser.add_argument('-over_sample', default = False, 
             help = 'Mark as True when desire to oversample. Default = False')
     parser.add_argument('-test_size', type = float, default = .2,
@@ -190,5 +190,39 @@ if __name__ == '__main__':
     parser.add_argument('-no_cancel', default = False, 
             help = 'Choose True to remove cancelled appointmet from dataset')
     args = parser.parse_args()
-    # args.model = str('rf')
+
     main(args)
+
+
+# cross validation
+# add prob output into data
+
+# design vector of paramters to input into the script
+#   inputs: 
+#       oversampling techniques
+#       historical vs nonhistorical vs all
+#       (run all models for each combiantion of parameters)
+#       one hot encoding (confirm that the category data type does this on back end)
+#       remove cancellations
+#       remove cancellations only due to doctor
+
+# design the analysis metrics for each model type
+#       All  
+#           ROC, confusion matrix, accuracy, precision, recall, AUC
+#       Regression
+#           MSE
+#       Decision
+#           information gain metric (gini, entropy)
+#           splits
+#           gini
+#       SVM
+#           distance from support vectors
+#       Random Forest
+#           number of trees
+# writing results to some file
+
+
+# keep calm, and keep feature engineering
+#       add feature for changes in insurance
+#       add feature for median household income based on zip codes
+
