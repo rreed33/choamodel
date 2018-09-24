@@ -4,12 +4,13 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC  
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.kernel_ridge import KernelRidge 
 import pandas as pd  
 import numpy as np  
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score 
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
 import dataprocessing
@@ -51,38 +52,8 @@ def edit(dataframe):
 
 
 def main(args):
-    # df = pd.read_csv("../data/choa_real_encounters.csv")
-    # df_dept = pd.read_csv('choa_dept.csv')
-    # df = df.merge(df_dept) 
-    # print(df.head())
-    # df = edit(df)
-
-    # df['Payor_Type_ID'] = df['Payor_Type_ID'].fillna(0, inplace=True)
-    # df = df.drop(['Encounter_ID','Appt_Date','Appt_Time','Appt_Made_Date',
-    #               'Appt_Made_Time','Sibley_ID', 'Dept_Name', 'Dept_Abbr_3', 'Dept_Abbr_4'], axis = 1)
-    # print(df)
-    # print(df.shape)
-
-    # df.fillna(0, inplace = True)
-
-    # df['Payor_Type_ID'].astype(str).astype(int).astype('category')
-    # df['Dept_ID'].astype('category')
-    # df['Provider_ID'].astype('category')
-    # df['Appt_Logistics_Type_ID'].astype('category')
-    # df['Visit_Type_ID'].astype('category')
-    
-
-    # print(df.dtypes)
-
     #EVERYTHING ABOVE HERE CAN BE IGNORED
     df = dataprocessing.main(args.group, args.no_cancel)
-
-    df = df.drop(['Encounter_ID','Appt_Date','Appt_Time','Appt_Made_Date',
-                  'Appt_Made_Time','Sibley_ID', 'Dept_Name', 'Dept_Abbr_3', 'Dept_Abbr_4'], axis = 1)
-    # print(df)
-    print(df.shape)
-
-    df.fillna(0, inplace = True)
 
     df['Payor_Type_ID'].astype(int).astype('category')
     df['Dept_ID'].astype('category')
@@ -93,14 +64,14 @@ def main(args):
     #print(np.any(np.isnan(df)))
     #print(np.all(np.isfinite(df)))
 
+    #split the data into dependent and predictor
     X = df.drop('No_Show', axis=1)  
     y = df['No_Show']
 
-    ##df = df.reset_index()
-    ##df = df.dropna()
-
-    #over sampling the no show class to even class distribution
+    # over sampling the no show class to even class distribution
+    # RYAN: over_sample will be a list of the inputs you write, indexed according to imput order, first being model method type
     if args.over_sample:
+        # args.over_sample[1:] are the parameters to plug into 
         from imblearn.combine import SMOTETomek
         smt = SMOTETomek(ratio='auto')
         X, y = smt.fit_sample(X, y)
@@ -122,6 +93,24 @@ def main(args):
         classifier = DecisionTreeClassifier()
     elif args.model == 'rf':
         classifier = RandomForestClassifier(n_estimators=100)
+
+    model_types = ['SVM', 'log', 'dtree', 'rf', 'kernel_log', 'ridge_log']
+    for model in model_types:
+
+        #start a classifier
+        if model == 'SVM':
+            classifier = SVC()
+        elif model == 'log':
+            classifier = LogisticRegression()
+        elif model == 'dtree':
+            classifier = DecisionTreeClassifier()
+        elif model == 'rf':
+            classifier = RandomForestClassifier(n_estimators=100)
+        elif model == 'kernel_log':
+            classifier = KernelRidge()
+            print('stuff to return')
+        elif model == 'ridge_log':
+            print('stuff to return')
 
     #fit the model
     print('='*20)
@@ -180,15 +169,16 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-model', default = 'rf')
-    parser.add_argument('-over_sample', default = False, 
-            help = 'Mark as True when desire to oversample. Default = False')
     parser.add_argument('-test_size', type = float, default = .2,
             help = 'the ratio of test to train in decimal form')
+    parser.add_argument('-one_hot', default = False, 
+            help = 'specify True to make the categorical variables into one hot vector embeddings')
     parser.add_argument('-group', default = 'all',
             help = 'pick all, historical, or nonhistorical to filter training data')
     parser.add_argument('-no_cancel', default = False, 
             help = 'Choose True to remove cancelled appointmet from dataset')
+    parser.add_argument('-over_sample', nargs = '*', default = None, 
+            help = 'Fill with the oversampling method and then values to plug into method after word, seperate by spaces')
     args = parser.parse_args()
 
     main(args)
@@ -196,6 +186,7 @@ if __name__ == '__main__':
 
 # cross validation
 # add prob output into data
+# make one hot encoding #ryan done
 
 # design vector of paramters to input into the script
 #   inputs: 
@@ -220,7 +211,7 @@ if __name__ == '__main__':
 #       Random Forest
 #           number of trees
 # writing results to some file
-
+    
 
 # keep calm, and keep feature engineering
 #       add feature for changes in insurance
