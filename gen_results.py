@@ -1,0 +1,6 @@
+# THIS SCRIPT WILL WRITE AND SAVE ALL OF THE RELATIVE ANALYTICS FOR EACH OF THE MODELS
+
+
+# INPUTS: 	FITTED MODEL, dataframe of test data from X, dataframe of test data from y
+# OUTPUTS: 	METIRCS AND VISUALIZATION FOR EACH MODEL, SAVE TO ../choamodel/results/
+
