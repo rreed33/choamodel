@@ -12,6 +12,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score 
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
+import dataprocessing
 import math
 import imblearn
 ##%matplotlib inline
@@ -50,44 +51,65 @@ def edit(dataframe):
 
 
 def main(args):
-    df = pd.read_csv("Encounters.csv")
-    df_dept = pd.read_csv('choa_dept.csv')
-    df = df.merge(df_dept) 
-    print(df.head())
-    df = edit(df)
+    # df = pd.read_csv("../data/choa_real_encounters.csv")
+    # df_dept = pd.read_csv('choa_dept.csv')
+    # df = df.merge(df_dept) 
+    # print(df.head())
+    # df = edit(df)
 
-    df['Payor_Type_ID'] = df['Payor_Type_ID'].fillna(0, inplace=True)
+    # df['Payor_Type_ID'] = df['Payor_Type_ID'].fillna(0, inplace=True)
+    # df = df.drop(['Encounter_ID','Appt_Date','Appt_Time','Appt_Made_Date',
+    #               'Appt_Made_Time','Sibley_ID', 'Dept_Name', 'Dept_Abbr_3', 'Dept_Abbr_4'], axis = 1)
+    # print(df)
+    # print(df.shape)
+
+    # df.fillna(0, inplace = True)
+
+    # df['Payor_Type_ID'].astype(str).astype(int).astype('category')
+    # df['Dept_ID'].astype('category')
+    # df['Provider_ID'].astype('category')
+    # df['Appt_Logistics_Type_ID'].astype('category')
+    # df['Visit_Type_ID'].astype('category')
+    
+
+    # print(df.dtypes)
+
+    #EVERYTHING ABOVE HERE CAN BE IGNORED
+    df = dataprocessing.main(args.group, args.no_cancel)
+
     df = df.drop(['Encounter_ID','Appt_Date','Appt_Time','Appt_Made_Date',
                   'Appt_Made_Time','Sibley_ID', 'Dept_Name', 'Dept_Abbr_3', 'Dept_Abbr_4'], axis = 1)
-    print(df)
+    # print(df)
     print(df.shape)
 
     df.fillna(0, inplace = True)
 
-    df['Payor_Type_ID'].astype(str).astype(int).astype('category')
+    df['Payor_Type_ID'].astype(int).astype('category')
     df['Dept_ID'].astype('category')
     df['Provider_ID'].astype('category')
     df['Appt_Logistics_Type_ID'].astype('category')
     df['Visit_Type_ID'].astype('category')
-    
 
-    print(df.dtypes)
-
-    ##print(np.any(np.isnan(df)))
-    ##print(np.all(np.isfinite(df)))
+    #print(np.any(np.isnan(df)))
+    #print(np.all(np.isfinite(df)))
 
     X = df.drop('No_Show', axis=1)  
     y = df['No_Show']
 
     ##df = df.reset_index()
     ##df = df.dropna()
-    from imblearn.combine import SMOTETomek
-    smt = SMOTETomek(ratio='auto')
-    X, y = smt.fit_sample(X, y)
-##  from imblearn.under_sampling import TomekLinks
-##  tl = TomekLinks(return_indices=True, ratio='majority')
-##  X, y, id_tl = tl.fit_sample(X, y)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20)
+
+    #over sampling the no show class to even class distribution
+    if args.over_sample:
+        from imblearn.combine import SMOTETomek
+        smt = SMOTETomek(ratio='auto')
+        X, y = smt.fit_sample(X, y)
+
+        from imblearn.under_sampling import TomekLinks
+        tl = TomekLinks(return_indices=True, ratio='majority')
+        X, y, id_tl = tl.fit_sample(X, y)
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=args.test_size)
 
     #build the model
     print('='*20)
@@ -104,18 +126,43 @@ def main(args):
     #fit the model
     print('='*20)
     print('FITTING MODEL')
-    classifier.fit(X_train, y_train) 
+    print('INTERNAL WORKINGS')
+    classifier.fit(X_train, y_train)
+    coefs = sorted([(i,round(j,3)) for i , j in zip(X_test.columns, classifier.coef_[0])], key = lambda x: abs(x[1]), reverse = True)
+    if args.model =='log':
+        for i in coefs:
+            print("{}:\t\t\t{}".format(i[0],i[1]))
+    elif args.model == 'dtree':
+        print('something to come')
 
     #predict the classes
     print('='*20)
     print('PREDICTING')
     y_pred = classifier.predict(X_test)
 
+    print('GENERAL')
     print('Accuracy score: ', accuracy_score(y_test, y_pred))
     print('CONFUSION MATRIX')
     print(confusion_matrix(y_test, y_pred))  
     print(classification_report(y_test, y_pred))
 
+    #look into how each model performs historical and nonhistorical subsets
+    hist_mask = X_test['count_app'] >= 1
+    nonhist_mask = X_test['count_app'] == 0
+    if args.group == 'all':
+        print('HISTORICAL')
+        print('Accuracy score: ', accuracy_score(y_test[hist_mask], y_pred[hist_mask]))
+        print('CONFUSION MATRIX')
+        print(confusion_matrix(y_test[hist_mask], y_pred[hist_mask]))  
+        print(classification_report(y_test[hist_mask], y_pred[hist_mask]))
+
+        print('NON-HISTORICAL')
+        print('Accuracy score: ', accuracy_score(y_test[nonhist_mask], y_pred[nonhist_mask]))
+        print('CONFUSION MATRIX')
+        print(confusion_matrix(y_test[nonhist_mask], y_pred[nonhist_mask]))  
+        print(classification_report(y_test[nonhist_mask], y_pred[nonhist_mask]))
+
+    #print the ROC graph
     logit_roc_auc = roc_auc_score(y_test, classifier.predict(X_test))
     fpr, tpr, thresholds = roc_curve(y_test, classifier.predict_proba(X_test)[:,1])
     plt.figure()
@@ -134,6 +181,14 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-model')
+    parser.add_argument('-over_sample', default = False, 
+            help = 'Mark as True when desire to oversample. Default = False')
+    parser.add_argument('-test_size', type = float, default = .2,
+            help = 'the ratio of test to train in decimal form')
+    parser.add_argument('-group', default = 'all',
+            help = 'pick all, historical, or nonhistorical to filter training data')
+    parser.add_argument('-no_cancel', default = False, 
+            help = 'Choose True to remove cancelled appointmet from dataset')
     args = parser.parse_args()
-    args.model = str('rf')
+    # args.model = str('rf')
     main(args)

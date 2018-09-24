@@ -28,7 +28,7 @@ def edit(dataframe):
 
 	#first let's see how many appointments each person has had up until then and hwo many they miseed
 	dataframe['count_app'] 		= dataframe.groupby('Sibley_ID', sort = 'Appt_Date').cumcount()
-	dataframe['count_miss']		= dataframe[dataframe['Appt_Status_ID']==1].groupby('Sibley_ID', sort = 'Appt_Date').cumcount()
+	dataframe['count_miss']		= dataframe[dataframe['Appt_Status_ID']==4].groupby('Sibley_ID', sort = 'Appt_Date').cumcount()
 	dataframe['count_cancel']	= dataframe[(dataframe['Appt_Status_ID'] != 2 )& (dataframe['Appt_Status_ID'] != 4)].groupby('Sibley_ID', sort = 'Appt_Date').cumcount()
 	dataframe['No_Show'] 		= (dataframe['Appt_Status_ID']==4).astype(int)
 	# print(dataframe.groupby('Sibley_ID', sort='Appt_Date').cumcount())
@@ -38,21 +38,35 @@ def edit(dataframe):
 	return dataframe
 
 
-def main():
-	df = pd.read_csv("../ENCOUNTERS_RAW.csv")
-	df_dept = pd.read_csv('../DEPT_RAW.csv')
+def main(group='all', no_cancel = False):
+	df = pd.read_csv("../data/ENCOUNTERS_RAW.csv")
+	df_dept = pd.read_csv('../data/DEPT_RAW.csv')
 	df = df.merge(df_dept, on = 'Dept_ID') 
-	print(df.head())
 	df = edit(df)
+
+	#only look at those with history
+	# df = df[df['count_app'] == 1]
+
+	#divide the group into historical and nonhistorical patients
+	if group == 'historical':
+		df = df[df['count_app'] > 1]
+	elif group == 'nonhistorical':
+		df = df[df['count_app'] == 1]
+
+	#get rid of cancellations
+	if no_cancel:
+		df = df[(df['Appt_Status_ID'] == 4) | (df['Appt_Status_ID'] == 2)]
 
 	df[['Payor_Type_ID']] = df[['Payor_Type_ID']].fillna(value=0)
 	df = df.drop([ 'Num_Canceled_Encounters_Since',
                        'Num_No_Show_Encounters_Since',
                        'Num_Canceled_Encounters_AllTime',
-                       'Num_No_Show_Encounters_AllTime'],
+                       'Num_No_Show_Encounters_AllTime',
+                       'Appt_Status_ID'],
                          axis = 1)
                     
 	df.to_csv('../choa_intermediate.csv')
+	return df
 
 if __name__ == '__main__':
 	main()

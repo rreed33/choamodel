@@ -13,6 +13,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score 
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve, pairwise
+import dataprocessing
 import FukuML
 import FukuML.KernelLogisticRegression as kernel_logistic_regression
 import math
@@ -54,11 +55,13 @@ def edit(dataframe):
 
 
 def main(args):
-	df = pd.read_csv("data/choa_real_encounters.csv")
-	df_dept = pd.read_csv('data/choa_dept.csv')
-	df = df.merge(df_dept, on = 'Dept_ID') 
-	print(df.head())
-	df = edit(df)
+	# df = pd.read_csv("data/choa_real_encounters.csv")
+	# df_dept = pd.read_csv('data/choa_dept.csv')
+	# df = df.merge(df_dept, on = 'Dept_ID') 
+	# print(df.head())
+	# df = edit(df)
+
+	df = dataprocessing.main()
 
 	df['Payor_Type_ID'] = df['Payor_Type_ID'].fillna(0, inplace=True)
 	
@@ -67,7 +70,7 @@ def main(args):
 	# df = df[df['Appt_Status_ID'] !=2]
 	# print(df.dtypes)
 	print('Provider_ID' in df.columns)
-	df = df.drop([ 'Provider_ID', 'Visit_Type_ID', 'Num_No_Show_Encounters_AllTime', 'Num_Canceled_Encounters_Since', 'Num_No_Show_Encounters_Since', 'Num_Canceled_Encounters_AllTime', 'Appt_Status_ID',
+	df = df.drop([ 'Provider_ID', 'Visit_Type_ID', 'Appt_Status_ID',
 					'Made_Lead_Days_Work','Encounter_ID','Appt_Date','Appt_Time','Appt_Made_Date',
 	              'Appt_Made_Time','Sibley_ID', 'Dept_Name', 'Dept_Abbr_3', 'Dept_Abbr_4'
 	              ], axis = 1)
@@ -80,14 +83,14 @@ def main(args):
 	# print(df)
 	# print(df.shape)
 
-	df['Payor_Type_ID'].astype(str).astype(int).astype('category')
+	df['Payor_Type_ID'].astype(int).astype('category')
 	df['Dept_ID'].astype('category')
 	# df['Provider_ID'].astype('category')
 	df['Appt_Logistics_Type_ID'].astype('category')
 	# df['Visit_Type_ID'].astype('category')
 	
 	#write a file here to peak into the data
-	df.to_csv('data/choa_intermediate.csv')
+	# df.to_csv('data/choa_intermediate.csv')
 
 	print(df.dtypes)
 
@@ -121,7 +124,7 @@ def main(args):
 	elif args.model == 'log':
 		classifier = LogisticRegression(solver='lbfgs')
 	elif args.model == 'kernel_log':
-		train.to_csv('data/choa_space_train.csv', sep = ' ', header = False)
+		# train.to_csv('data/choa_space_train.csv', sep = ' ', header = False)
 		classifier = kernel_logistic_regression.KernelLogisticRegression()
 
 	#fit the model
@@ -140,7 +143,7 @@ def main(args):
 	#predict the classes
 	print('='*20)
 	print('PREDICTING')
-	X_test.to_csv('data/choa_space_test.csv', sep = ' ', header = False)
+	# X_test.to_csv('data/choa_space_test.csv', sep = ' ', header = False)
 	y_pred = classifier.predict(X_test) if args.model != 'kernel_log' else classifier.load_test_data('data/choa_space_test.csv')
 	y_train_pred = classifier.predict(X_train)
 	# classifier.train()
