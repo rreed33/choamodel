@@ -25,7 +25,7 @@ def record_file(args, df):
     parameter_names = ['Test', 'Hot', 'Group', 'NoCancel', 'Over']
     parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.over_sample]
     file_name   = '../choamodel/results/'
-    file_ext     = '_'.join([str(i)+'_'+str(j) for i,j in zip(parameter_names, parameters)])
+    file_ext     = '_'.join([str(i)+'_'+str(j) for i,j in zip(parameter_names, parameters)]) +'_API_True'
     file_name = file_name + file_ext + '/'
 
     print(file_name)
@@ -86,6 +86,7 @@ def main(args):
     #split the data into dependent and predictor
     X = df.drop('No_Show', axis=1)  
     y = df['No_Show']
+    print(X.dtypes)
 
     #record initial metrics about the dataset
     file_name = record_file(args, df)

@@ -1,0 +1,76 @@
+---This file was generate as a part of Senior Design by team 14 on 2018-09-25 17:15:25.443000 ---
+
+COMMAND LINE ARGUMENTS:
+ Test: 0.5, Hot: False, Group: nonhistorical, NoCancel: False, Over: None
+Training Group:	NONHISTORICAL
+Number of Encounters: 68414
+Number of Patients: 68414
+Number of Features: 28
+Number of No Shows:	4862
+
+Feature Names:
+Appt_Length, Dept_ID, Provider_ID, Appt_Logistics_Type_ID, Made_Lead_Days_Work, Made_Lead_Days_Calendar, Visit_Type_ID, Sibley_ID, Patient_Latitude, Patient_Longitude, Patient_Age_Bucket_ID, Payor_Type_ID, Dept_Location_Latitude, Dept_Location_Longitude, Unnamed: 0, Duration, Distance, No_Show, count_app, count_miss, count_cancel, diff_pay_count, Appt_Year, Appt_Month, Appt_Day, Appt_Made_Year, Appt_Made_Month, Appt_Made_Day
+
+
+----------Writing Results for __log_NONHISTORICAL__ ----------
+Accuracy Score:	0.928903440816
+Confusion Matrix:
+[[31775     0]
+ [ 2432     0]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.93      1.00      0.96     31775
+          1       0.00      0.00      0.00      2432
+
+avg / total       0.86      0.93      0.89     34207
+
+ROC AUC Score:	0.5
+
+
+----------Writing Results for __dtree_NONHISTORICAL__ ----------
+Accuracy Score:	1.0
+Confusion Matrix:
+[[31775     0]
+ [    0  2432]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       1.00      1.00      1.00     31775
+          1       1.00      1.00      1.00      2432
+
+avg / total       1.00      1.00      1.00     34207
+
+ROC AUC Score:	1.0
+
+
+----------Writing Results for __rf_NONHISTORICAL__ ----------
+Accuracy Score:	1.0
+Confusion Matrix:
+[[31775     0]
+ [    0  2432]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       1.00      1.00      1.00     31775
+          1       1.00      1.00      1.00      2432
+
+avg / total       1.00      1.00      1.00     34207
+
+ROC AUC Score:	1.0
+
+
+----------Writing Results for __knn_NONHISTORICAL__ ----------
+Accuracy Score:	0.925453854474
+Confusion Matrix:
+[[31643   132]
+ [ 2418    14]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.93      1.00      0.96     31775
+          1       0.10      0.01      0.01      2432
+
+avg / total       0.87      0.93      0.89     34207
+
+ROC AUC Score:	0.500801184832

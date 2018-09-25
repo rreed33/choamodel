@@ -17,13 +17,26 @@ def distance(lat1, lon1, lat2, lon2):
 
     return d
 
+def google_distance(df):
+
+	#read in the file with all the distances and times for each encounter and scale 
+	dist_df = pd.read_csv('../data/google_dist.csv')
+	scaler = sklearn.preprocessing.MinMaxScaler()
+	dist_df['Distance'] = scaler.fit_transform(dist_df['Distance'].values.reshape(-1,1))
+	dist_df['Duration'] = scaler.fit_transform(dist_df['Duration'].values.reshape(-1,1))
+
+	#join the two dataframes on 'Encounter_ID'
+	df = df.merge(dist_df, on='Encounter_ID')
+
+	return df
+
 def edit(dataframe):
 	#use this function to organize all the edits to the raw data before processing
 
 
 	#get the bird's eye distance to from home to office
-	dataframe['distance'] = np.vectorize(distance)(dataframe['Patient_Latitude'], -1*dataframe['Patient_Longitude'],
-						 				dataframe['Dept_Location_Latitude'], -1*dataframe['Dept_Location_Longitude'] )
+	# dataframe['distance'] = np.vectorize(distance)(dataframe['Patient_Latitude'], -1*dataframe['Patient_Longitude'],
+						 				# dataframe['Dept_Location_Latitude'], -1*dataframe['Dept_Location_Longitude'] )
 
 	#first let's see how many appointments each person has had up until then and hwo many they miseed
 	dataframe['No_Show']		= (dataframe['Appt_Status_ID']==4).astype(int)
@@ -59,6 +72,7 @@ def main(group='all', no_cancel = False, one_hot = False):
 	df = pd.read_csv("../data/ENCOUNTERS_RAW.csv")
 	df_dept = pd.read_csv('../data/DEPT_RAW.csv')
 	df = df.merge(df_dept, on = 'Dept_ID') 
+	df = google_distance(df)
 	df.sort_values(by = 'Appt_Date', inplace = True)
 	df = edit(df)
 
