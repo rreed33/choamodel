@@ -1,59 +1,50 @@
 import argparse
 import sklearn
+import pandas as pd  
+import numpy as np 
+import matplotlib.pyplot as plt
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC  
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.kernel_ridge import KernelRidge 
-import pandas as pd  
-import numpy as np  
-import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
-from sklearn.metrics import roc_auc_score
-from sklearn.metrics import roc_curve
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score, roc_curve
 import dataprocessing
 import math
 import imblearn
-##%matplotlib inline
-# def no_show_sum(df):
-#   df[df['No_Show']==0].cumcount()
-
-def distance(lat1, lon1, lat2, lon2):
-    radius = 6371 # km
-
-    dlat = math.radians(lat2-lat1)
-    dlon = math.radians(lon2-lon1)
-    a = math.sin(dlat/2) * math.sin(dlat/2) + math.cos(math.radians(lat1)) \
-        * math.cos(math.radians(lat2)) * math.sin(dlon/2) * math.sin(dlon/2)
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
-    d = radius * c
-
-    return d
-
-def edit(dataframe):
-    #use this function to organize all the edits to the raw data before processing
-    print(dataframe.dtypes)
-    print(dataframe['No_Show'])
-
-    #get the bird's eye distance to from home to office
-    dataframe['distance'] = np.vectorize(distance)(dataframe['Patient_Latitude'], -1*dataframe['Patient_Longitude'],
-                                        dataframe['Dept_Location_Latitude'], -1*dataframe['Dept_Location_Longitude'] )
-
-    #first let's see how many appointments each person has had up until then and hwo many they miseed
-    dataframe['count_app'] = dataframe.groupby('Sibley_ID', sort = 'Appt_Date').cumcount()
-    dataframe['count_miss']= dataframe[dataframe['No_Show']==0].groupby('Sibley_ID', sort = 'Appt_Date').cumcount()
-    print(dataframe.groupby('Sibley_ID', sort='Appt_Date').cumcount())
+import os
+import datetime as dt 
 
 
-    #calculate bird eye distance 
-    return dataframe
+def record_file(args, df):
+    parameter_names = ['Test_', 'Hot_', 'Group_', 'NoCancel_', 'Over_']
+    parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.over_sample]
+    file_name   = 'results'
+    file_ext     = ['_'+str(i)+str(j) for i in zip(parameter_names, parameters)]
+    file_name = filename + file_ext + '/'
+
+
+    if not os.path.exists('../results/'+file_name):
+        os.makedirs('../results/'+file_name)
+
+    with open('results.txt', permission) as f:
+        f.write('--This file was generate as a part of Senior Design by team 14 on {}'.format(dt.datetime.today()))
+    return 'results/'+file_name
+
+#unique patients
+#arguments 
+#number of encounters
+#features
+
+def record_results(args, results):
+
 
 
 def main(args):
     #EVERYTHING ABOVE HERE CAN BE IGNORED
-    df = dataprocessing.main(args.group, args.no_cancel)
+    df = dataprocessing.main(args.group, args.no_cancel, args.one_hot)
 
     df['Payor_Type_ID'].astype(int).astype('category')
     df['Dept_ID'].astype('category')
@@ -61,12 +52,12 @@ def main(args):
     df['Appt_Logistics_Type_ID'].astype('category')
     df['Visit_Type_ID'].astype('category')
 
-    #print(np.any(np.isnan(df)))
-    #print(np.all(np.isfinite(df)))
-
     #split the data into dependent and predictor
     X = df.drop('No_Show', axis=1)  
     y = df['No_Show']
+
+    #record initial metrics about the dataset
+    file = record_file(args, df)
 
     # over sampling the no show class to even class distribution
     # RYAN: over_sample will be a list of the inputs you write, indexed according to imput order, first being model method type
@@ -84,19 +75,10 @@ def main(args):
 
     #build the model
     print('='*20)
-    print('INITIALIZING {} MODEL'.format(args.model))
-    if args.model == 'SVM':
-        classifier = SVC()
-    elif args.model == 'log':
-        classifier = LogisticRegression()
-    elif args.model == 'dtree':
-        classifier = DecisionTreeClassifier()
-    elif args.model == 'rf':
-        classifier = RandomForestClassifier(n_estimators=100)
+    print('INITIALIZING MODELS')
 
     model_types = ['SVM', 'log', 'dtree', 'rf', 'kernel_log', 'ridge_log']
     for model in model_types:
-
         #start a classifier
         if model == 'SVM':
             classifier = SVC()
@@ -106,11 +88,14 @@ def main(args):
             classifier = DecisionTreeClassifier()
         elif model == 'rf':
             classifier = RandomForestClassifier(n_estimators=100)
-        elif model == 'kernel_log':
-            classifier = KernelRidge()
-            print('stuff to return')
-        elif model == 'ridge_log':
-            print('stuff to return')
+        elif model == 'kernel_ridge':
+            classifier = KernelRidge(aplha = 1)
+        elif model == 'ridge_reg':
+            classifier = 
+        elif model == 'lasso_reg'
+            print('something will go here')
+        elif model == 'knn':
+            print('something will go here')
 
     #fit the model
     print('='*20)
@@ -210,6 +195,7 @@ if __name__ == '__main__':
 #           distance from support vectors
 #       Random Forest
 #           number of trees
+
 # writing results to some file
     
 
