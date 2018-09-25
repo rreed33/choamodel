@@ -35,8 +35,8 @@ def record_file(args, df):
 
     with open(file_name+'results.txt', 'w') as f:
         f.write('---This file was generate as a part of Senior Design by team 14 on {} ---'.format(dt.datetime.today()))
-        f.write('COMMAND LINE ARGUMENTS:\n '+', '.join([str(i)+': '+str(j) for i, j in zip(parameter_names, parameters)]))
-
+        f.write('\nCOMMAND LINE ARGUMENTS:\n '+', '.join([str(i)+': '+str(j) for i, j in zip(parameter_names, parameters)]))
+        f.write('\nTraining Group: {}\nNumber of Encounters: {}\nNumber of Features: {}'.format(args.group.upper(),len(df), len(df.columns)))
     return file_name
 
 #unique patients
@@ -61,10 +61,10 @@ def classification_report_csv(report):
 
     return dataframe
 
-def record_results(model, results, file_name):
+def record_results(model, results, file_name, group):
 
     with open(file_name+'results.txt', 'a') as f:
-        f.write('\n\n----------Writing Results for __{}__ ----------\n'.format(model))
+        f.write('\n\n----------Writing Results for __{}_{}__ ----------\n'.format(model, group))
         f.write('Accuracy Score:\t{}\n'.format(results['Accuracy Score']))
         f.write('Confusion Matrix:\n{}\n'.format(np.array_str(results['Confusion Matrix'])))
         # f.write('Classification Report:\n{}\n'.format(classification_report_csv(results['Classification Report'])))
@@ -168,63 +168,72 @@ def main(args):
             print('fitting {} model'.format(model))
             classifier.fit(X_train, y_train)
 
-        
+        print('GENERAL')
         results = make_results(classifier, X_test, y_test, model, file_name)
-        record_results(model, results, file_name)
+        record_results(model, results, file_name, args.group.upper())
+        if args.group == 'all':
+            hist_mask = X_test['count_app'] >= 1
+            nonhist_mask = X_test['count_app'] == 0
+            print('HISTORICAL')
+            results_hist = make_results(classifier, X_test[hist_mask], y_test[hist_mask], model, file_name)
+            record_results(model, results_hist, file_name, 'HISTORICAL')
 
+            print('NONHISTORICAL')
+            results_nonhist = make_results(classifier, X_test[nonhist_mask], y_test[nonhist_mask], model, file_name)
+            record_results(model, results_nonhist, file_name, 'NONHISTORICAL')
     #fit the model
-    print('='*20)
-    print('FITTING MODEL')
-    print('INTERNAL WORKINGS')
-    # classifier.fit(X_train, y_train)
-    coefs = sorted([(i,round(j,3)) for i , j in zip(X_test.columns, classifier.coef_[0])], key = lambda x: abs(x[1]), reverse = True)
-    if args.model =='log':
-        for i in coefs:
-            print("{}:\t\t\t{}".format(i[0],i[1]))
-    elif args.model == 'dtree':
-        print('something to come')
+    # print('='*20)
+    # print('FITTING MODEL')
+    # print('INTERNAL WORKINGS')
+    # # classifier.fit(X_train, y_train)
+    # coefs = sorted([(i,round(j,3)) for i , j in zip(X_test.columns, classifier.coef_[0])], key = lambda x: abs(x[1]), reverse = True)
+    # if args.model =='log':
+    #     for i in coefs:
+    #         print("{}:\t\t\t{}".format(i[0],i[1]))
+    # elif args.model == 'dtree':
+    #     print('something to come')
 
-    #predict the classes
-    print('='*20)
-    print('PREDICTING')
-    y_pred = classifier.predict(X_test)
+    # #predict the classes
+    # print('='*20)
+    # print('PREDICTING')
+    # y_pred = classifier.predict(X_test)
 
-    print('GENERAL')
-    print('Accuracy score: ', accuracy_score(y_test, y_pred))
-    print('CONFUSION MATRIX')
-    print(confusion_matrix(y_test, y_pred))  
-    print(classification_report(y_test, y_pred))
+    # print('GENERAL')
+    # print('Accuracy score: ', accuracy_score(y_test, y_pred))
+    # print('CONFUSION MATRIX')
+    # print(confusion_matrix(y_test, y_pred))  
+    # print(classification_report(y_test, y_pred))
 
-    #look into how each model performs historical and nonhistorical subsets
-    hist_mask = X_test['count_app'] >= 1
-    nonhist_mask = X_test['count_app'] == 0
-    if args.group == 'all':
-        print('HISTORICAL')
-        print('Accuracy score: ', accuracy_score(y_test[hist_mask], y_pred[hist_mask]))
-        print('CONFUSION MATRIX')
-        print(confusion_matrix(y_test[hist_mask], y_pred[hist_mask]))  
-        print(classification_report(y_test[hist_mask], y_pred[hist_mask]))
+    # #look into how each model performs historical and nonhistorical subsets
+    # hist_mask = X_test['count_app'] >= 1
+    # nonhist_mask = X_test['count_app'] == 0
+    # if args.group == 'all':
+    #     print('HISTORICAL')
+    #     print('Accuracy score: ', accuracy_score(y_test[hist_mask], y_pred[hist_mask]))
+    #     print('CONFUSION MATRIX')
+    #     print(confusion_matrix(y_test[hist_mask], y_pred[hist_mask]))  
+    #     print(classification_report(y_test[hist_mask], y_pred[hist_mask]))
 
-        print('NON-HISTORICAL')
-        print('Accuracy score: ', accuracy_score(y_test[nonhist_mask], y_pred[nonhist_mask]))
-        print('CONFUSION MATRIX')
-        print(confusion_matrix(y_test[nonhist_mask], y_pred[nonhist_mask]))  
-        print(classification_report(y_test[nonhist_mask], y_pred[nonhist_mask]))
+    #     print('NON-HISTORICAL')
+    #     print('Accuracy score: ', accuracy_score(y_test[nonhist_mask], y_pred[nonhist_mask]))
+    #     print('CONFUSION MATRIX')
+    #     print(confusion_matrix(y_test[nonhist_mask], y_pred[nonhist_mask]))  
+    #     print(classification_report(y_test[nonhist_mask], y_pred[nonhist_mask]))
 
-    #print the ROC graph
-    logit_roc_auc = roc_auc_score(y_test, classifier.predict(X_test))
-    fpr, tpr, thresholds = roc_curve(y_test, classifier.predict_proba(X_test)[:,1])
-    plt.figure()
-    plt.plot(fpr, tpr, label='SVM (area = %0.2f)' % logit_roc_auc)
-    plt.plot([0, 1], [0, 1],'r--')
-    plt.xlim([0.0, 1.0])
-    plt.ylim([0.0, 1.05])
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title('Receiver operating characteristic')
-    plt.legend(loc="lower right")
-    plt.savefig('Log_ROC')
-    plt.show()
+    # #print the ROC graph
+    # logit_roc_auc = roc_auc_score(y_test, classifier.predict(X_test))
+    # fpr, tpr, thresholds = roc_curve(y_test, classifier.predict_proba(X_test)[:,1])
+    # plt.figure()
+    # plt.plot(fpr, tpr, label='SVM (area = %0.2f)' % logit_roc_auc)
+    # plt.plot([0, 1], [0, 1],'r--')
+    # plt.xlim([0.0, 1.0])
+    # plt.ylim([0.0, 1.05])
+    # plt.xlabel('False Positive Rate')
+    # plt.ylabel('True Positive Rate')
+    # plt.title('Receiver operating characteristic')
+    # plt.legend(loc="lower right")
+    # plt.savefig('Log_ROC')
+    # plt.show()
 
 
 if __name__ == '__main__':

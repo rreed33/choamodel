@@ -1,0 +1,37 @@
+---This file was generate as a part of Senior Design by team 14 on 2018-09-25 07:51:42.670000 ---
+COMMAND LINE ARGUMENTS:
+ Test: 0.2, Hot: False, Group: historical, NoCancel: False, Over: None
+Training Group: HISTORICAL
+Number of Encounters: 61895
+Number of Features: 20
+
+----------Writing Results for __log_HISTORICAL__ ----------
+Accuracy Score:	0.887066806689
+Confusion Matrix:
+[[10981     0]
+ [ 1398     0]]
+ROC AUC Score:	0.5
+
+
+----------Writing Results for __dtree_HISTORICAL__ ----------
+Accuracy Score:	0.92454964052
+Confusion Matrix:
+[[10521   460]
+ [  474   924]]
+ROC AUC Score:	0.809526833903
+
+
+----------Writing Results for __rf_HISTORICAL__ ----------
+Accuracy Score:	0.939009613054
+Confusion Matrix:
+[[10733   248]
+ [  507   891]]
+ROC AUC Score:	0.80737729586
+
+
+----------Writing Results for __knn_HISTORICAL__ ----------
+Accuracy Score:	0.876726714597
+Confusion Matrix:
+[[10798   183]
+ [ 1343    55]]
+ROC AUC Score:	0.511338384065

@@ -1,7 +1,11 @@
----This file was generate as a part of Senior Design by team 14 on 2018-09-24 23:20:25.508000 ---COMMAND LINE ARGUMENTS:
+---This file was generate as a part of Senior Design by team 14 on 2018-09-25 07:48:42.307000 ---
+COMMAND LINE ARGUMENTS:
  Test: 0.2, Hot: False, Group: all, NoCancel: False, Over: None
+Training Group: ALL
+Number of Encounters: 134023
+Number of Features: 20
 
-----------Writing Results for __log__ ----------
+----------Writing Results for __log_ALL__ ----------
 Accuracy Score:	0.912590934527
 Confusion Matrix:
 [[24462     0]
@@ -9,25 +13,89 @@ Confusion Matrix:
 ROC AUC Score:	0.5
 
 
-----------Writing Results for __dtree__ ----------
-Accuracy Score:	0.965416899832
+----------Writing Results for __log_HISTORICAL__ ----------
+Accuracy Score:	0.891103548858
 Confusion Matrix:
-[[23994   468]
- [  459  1884]]
-ROC AUC Score:	0.892482798322
+[[10998     0]
+ [ 1344     0]]
+ROC AUC Score:	0.5
 
 
-----------Writing Results for __rf__ ----------
-Accuracy Score:	0.972654355531
+----------Writing Results for __log_NONHISTORICAL__ ----------
+Accuracy Score:	0.930927193528
 Confusion Matrix:
-[[24203   259]
- [  474  1869]]
-ROC AUC Score:	0.89355370597
+[[13464     0]
+ [  999     0]]
+ROC AUC Score:	0.5
 
 
-----------Writing Results for __knn__ ----------
+----------Writing Results for __dtree_ALL__ ----------
+Accuracy Score:	0.965155754523
+Confusion Matrix:
+[[23993   469]
+ [  465  1878]]
+ROC AUC Score:	0.891181948725
+
+
+----------Writing Results for __dtree_HISTORICAL__ ----------
+Accuracy Score:	0.924323448388
+Confusion Matrix:
+[[10529   469]
+ [  465   879]]
+ROC AUC Score:	0.805686870015
+
+
+----------Writing Results for __dtree_NONHISTORICAL__ ----------
+Accuracy Score:	1.0
+Confusion Matrix:
+[[13464     0]
+ [    0   999]]
+ROC AUC Score:	1.0
+
+
+----------Writing Results for __rf_ALL__ ----------
+Accuracy Score:	0.972169371386
+Confusion Matrix:
+[[24202   260]
+ [  486  1857]]
+ROC AUC Score:	0.890972446642
+
+
+----------Writing Results for __rf_HISTORICAL__ ----------
+Accuracy Score:	0.939555987684
+Confusion Matrix:
+[[10738   260]
+ [  486   858]]
+ROC AUC Score:	0.807376097602
+
+
+----------Writing Results for __rf_NONHISTORICAL__ ----------
+Accuracy Score:	1.0
+Confusion Matrix:
+[[13464     0]
+ [    0   999]]
+ROC AUC Score:	1.0
+
+
+----------Writing Results for __knn_ALL__ ----------
 Accuracy Score:	0.905763850028
 Confusion Matrix:
 [[24205   257]
  [ 2269    74]]
 ROC AUC Score:	0.510538674477
+
+
+----------Writing Results for __knn_HISTORICAL__ ----------
+Accuracy Score:	0.884297520661
+Confusion Matrix:
+[[10862   136]
+ [ 1292    52]]
+ROC AUC Score:	0.513162295742
+
+
+----------Writing Results for __knn_NONHISTORICAL__ ----------
+Accuracy Score:	0.924082140635
+Confusion Matrix:
+[[13343   121]
+ [  977    22]]
+ROC AUC Score:	0.506517546959
