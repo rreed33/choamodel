@@ -33,13 +33,21 @@ def edit(dataframe):
 	dataframe['count_app'] 		= grouped_sibley.cumcount()
 	dataframe['count_miss']		= grouped_sibley['No_Show'].cumsum()
 	dataframe['count_cancel']	= grouped_sibley['Cancelled'].cumsum()
-	# dataframe['diff_pay_count']	= grouped_sibley['Payor_Type_ID'].agg( lambda x: sum(x.diff() != 0) )
+	dataframe['diff_pay_count']	= grouped_sibley['Payor_Type_ID'].apply( lambda x: ((x - x.shift()) != 0).cumsum() )
 	
-	# earliest_date				= 
+	# Appt_Made_Time into its of year, month date
 	dataframe['Appt_Date'] 		= pd.to_datetime(dataframe['Appt_Date'])
-	
+	dataframe['Appt_Year']		= dataframe['Appt_Date'].apply(lambda x: x.year)
+	dataframe['Appt_Month']		= dataframe['Appt_Date'].apply(lambda x: x.month)
+	dataframe['Appt_Day']		= dataframe['Appt_Date'].apply(lambda x: x.day)
 
-	dataframe = dataframe.drop(['Encounter_ID','Appt_Date','Appt_Time','Appt_Made_Date',
+	# Appt_Made_Time into its of year, month date
+	dataframe['Appt_Made_Date'] 	= pd.to_datetime(dataframe['Appt_Made_Date'])
+	dataframe['Appt_Made_Year']		= dataframe['Appt_Made_Date'].apply(lambda x: x.year)
+	dataframe['Appt_Made_Month']	= dataframe['Appt_Made_Date'].apply(lambda x: x.month)
+	dataframe['Appt_Made_Day']		= dataframe['Appt_Made_Date'].apply(lambda x: x.day)
+
+	dataframe = dataframe.drop(['Cancelled','Encounter_ID','Appt_Date','Appt_Time','Appt_Made_Date',
                   'Appt_Made_Time', 'Dept_Name', 'Dept_Abbr_3', 'Dept_Abbr_4'], axis=1)
 
 	dataframe.fillna(0, inplace = True)
@@ -94,6 +102,7 @@ def main(group='all', no_cancel = False, one_hot = False):
                        'Appt_Status_ID'],
                          axis = 1)
                     
+	print(df.keys())
 	df.to_csv('../data/choa_intermediate.csv')
 	return df
 

@@ -34,9 +34,11 @@ def record_file(args, df):
         os.makedirs(file_name)
 
     with open(file_name+'results.txt', 'w') as f:
-        f.write('---This file was generate as a part of Senior Design by team 14 on {} ---'.format(dt.datetime.today()))
+        f.write('---This file was generate as a part of Senior Design by team 14 on {} ---\n'.format(dt.datetime.today()))
         f.write('\nCOMMAND LINE ARGUMENTS:\n '+', '.join([str(i)+': '+str(j) for i, j in zip(parameter_names, parameters)]))
-        f.write('\nTraining Group: {}\nNumber of Encounters: {}\nNumber of Features: {}'.format(args.group.upper(),len(df), len(df.columns)))
+        f.write('\nTraining Group:\t{}\nNumber of Encounters: {}\nNumber of Patients: {}\nNumber of Features: {}'.format(args.group.upper(),len(df), len(np.unique(df['Sibley_ID'])), len(df.columns)))
+        f.write('\nNumber of No Shows:\t{}\n'.format(sum(df['No_Show'])))
+        f.write('\nFeature Names:\n{}\n'.format(', '.join([i for i in df.keys()])))
     return file_name
 
 #unique patients
@@ -66,8 +68,8 @@ def record_results(model, results, file_name, group):
     with open(file_name+'results.txt', 'a') as f:
         f.write('\n\n----------Writing Results for __{}_{}__ ----------\n'.format(model, group))
         f.write('Accuracy Score:\t{}\n'.format(results['Accuracy Score']))
-        f.write('Confusion Matrix:\n{}\n'.format(np.array_str(results['Confusion Matrix'])))
-        # f.write('Classification Report:\n{}\n'.format(classification_report_csv(results['Classification Report'])))
+        f.write('Confusion Matrix:\n{}\n'.format(results['Confusion Matrix']))
+        f.write('Classification Report:\n{}\n'.format(results['Classification Report']))
         f.write('ROC AUC Score:\t{}\n'.format(results['ROC AUC']))
 
 
@@ -171,16 +173,22 @@ def main(args):
         print('GENERAL')
         results = make_results(classifier, X_test, y_test, model, file_name)
         record_results(model, results, file_name, args.group.upper())
+
         if args.group == 'all':
+            #split the ALL segment into HISTORICAL AND NONHISTORICAL
             hist_mask = X_test['count_app'] >= 1
             nonhist_mask = X_test['count_app'] == 0
+
+            #write resutls for HISTORICAL SEGMENT
             print('HISTORICAL')
             results_hist = make_results(classifier, X_test[hist_mask], y_test[hist_mask], model, file_name)
             record_results(model, results_hist, file_name, 'HISTORICAL')
 
+            #write results for NONHISTORICAL SEGMENT
             print('NONHISTORICAL')
             results_nonhist = make_results(classifier, X_test[nonhist_mask], y_test[nonhist_mask], model, file_name)
             record_results(model, results_nonhist, file_name, 'NONHISTORICAL')
+    
     #fit the model
     # print('='*20)
     # print('FITTING MODEL')

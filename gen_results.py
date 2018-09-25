@@ -36,7 +36,7 @@ def main(model, X_test, y_test, model_name, file_name):
     modelMetrics['ROC AUC'] = roc_auc_score(y_test, model.predict(X_test))
 
     print(type(modelMetrics['Accuracy Score']), type(modelMetrics['Confusion Matrix']), type(modelMetrics['Classification Report']), type(modelMetrics['ROC AUC']))
-
+    print(modelMetrics['Classification Report'])
     logit_roc_auc = roc_auc_score(y_test, model.predict(X_test))
     fpr, tpr, thresholds = roc_curve(y_test, model.predict_proba(X_test)[:,1])
     plt.figure()

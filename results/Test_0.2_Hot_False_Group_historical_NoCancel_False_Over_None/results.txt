@@ -1,37 +1,76 @@
----This file was generate as a part of Senior Design by team 14 on 2018-09-25 07:51:42.670000 ---
+---This file was generate as a part of Senior Design by team 14 on 2018-09-25 10:51:52.126000 ---
+
 COMMAND LINE ARGUMENTS:
  Test: 0.2, Hot: False, Group: historical, NoCancel: False, Over: None
-Training Group: HISTORICAL
+Training Group:	HISTORICAL
 Number of Encounters: 61895
-Number of Features: 20
+Number of Patients: 25089
+Number of Features: 26
+Number of No Shows:	6624
+
+Feature Names:
+Appt_Length, Dept_ID, Provider_ID, Appt_Logistics_Type_ID, Made_Lead_Days_Work, Made_Lead_Days_Calendar, Visit_Type_ID, Sibley_ID, Patient_Latitude, Patient_Longitude, Patient_Age_Bucket_ID, Payor_Type_ID, Dept_Location_Latitude, Dept_Location_Longitude, distance, No_Show, count_app, count_miss, count_cancel, diff_pay_count, Appt_Year, Appt_Month, Appt_Day, Appt_Made_Year, Appt_Made_Month, Appt_Made_Day
+
 
 ----------Writing Results for __log_HISTORICAL__ ----------
 Accuracy Score:	0.887066806689
 Confusion Matrix:
 [[10981     0]
  [ 1398     0]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.89      1.00      0.94     10981
+          1       0.00      0.00      0.00      1398
+
+avg / total       0.79      0.89      0.83     12379
+
 ROC AUC Score:	0.5
 
 
 ----------Writing Results for __dtree_HISTORICAL__ ----------
-Accuracy Score:	0.92454964052
+Accuracy Score:	0.906212133452
 Confusion Matrix:
-[[10521   460]
- [  474   924]]
-ROC AUC Score:	0.809526833903
+[[10402   579]
+ [  582   816]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.95      0.95      0.95     10981
+          1       0.58      0.58      0.58      1398
+
+avg / total       0.91      0.91      0.91     12379
+
+ROC AUC Score:	0.765481774411
 
 
 ----------Writing Results for __rf_HISTORICAL__ ----------
-Accuracy Score:	0.939009613054
+Accuracy Score:	0.925115114306
 Confusion Matrix:
-[[10733   248]
- [  507   891]]
-ROC AUC Score:	0.80737729586
+[[10760   221]
+ [  706   692]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.94      0.98      0.96     10981
+          1       0.76      0.49      0.60      1398
+
+avg / total       0.92      0.93      0.92     12379
+
+ROC AUC Score:	0.737433587655
 
 
 ----------Writing Results for __knn_HISTORICAL__ ----------
-Accuracy Score:	0.876726714597
+Accuracy Score:	0.878180790048
 Confusion Matrix:
-[[10798   183]
- [ 1343    55]]
-ROC AUC Score:	0.511338384065
+[[10817   164]
+ [ 1344    54]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.89      0.99      0.93     10981
+          1       0.25      0.04      0.07      1398
+
+avg / total       0.82      0.88      0.84     12379
+
+ROC AUC Score:	0.511845860955
