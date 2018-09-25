@@ -1,0 +1,33 @@
+---This file was generate as a part of Senior Design by team 14 on 2018-09-24 23:20:25.508000 ---COMMAND LINE ARGUMENTS:
+ Test: 0.2, Hot: False, Group: all, NoCancel: False, Over: None
+
+----------Writing Results for __log__ ----------
+Accuracy Score:	0.912590934527
+Confusion Matrix:
+[[24462     0]
+ [ 2343     0]]
+ROC AUC Score:	0.5
+
+
+----------Writing Results for __dtree__ ----------
+Accuracy Score:	0.965416899832
+Confusion Matrix:
+[[23994   468]
+ [  459  1884]]
+ROC AUC Score:	0.892482798322
+
+
+----------Writing Results for __rf__ ----------
+Accuracy Score:	0.972654355531
+Confusion Matrix:
+[[24203   259]
+ [  474  1869]]
+ROC AUC Score:	0.89355370597
+
+
+----------Writing Results for __knn__ ----------
+Accuracy Score:	0.905763850028
+Confusion Matrix:
+[[24205   257]
+ [ 2269    74]]
+ROC AUC Score:	0.510538674477

@@ -23,7 +23,7 @@ def edit(dataframe):
 
 	#get the bird's eye distance to from home to office
 	dataframe['distance'] = np.vectorize(distance)(dataframe['Patient_Latitude'], -1*dataframe['Patient_Longitude'],
-										dataframe['Dept_Location_Latitude'], -1*dataframe['Dept_Location_Longitude'] )
+						 				dataframe['Dept_Location_Latitude'], -1*dataframe['Dept_Location_Longitude'] )
 
 	#first let's see how many appointments each person has had up until then and hwo many they miseed
 	dataframe['No_Show']		= (dataframe['Appt_Status_ID']==4).astype(int)
@@ -33,19 +33,17 @@ def edit(dataframe):
 	dataframe['count_app'] 		= grouped_sibley.cumcount()
 	dataframe['count_miss']		= grouped_sibley['No_Show'].cumsum()
 	dataframe['count_cancel']	= grouped_sibley['Cancelled'].cumsum()
-	dataframe['diff_pay_count']	= grouped_sibley['Payor_Type_ID'].agg( lambda x: sum(x.diff() != 0) )
+	# dataframe['diff_pay_count']	= grouped_sibley['Payor_Type_ID'].agg( lambda x: sum(x.diff() != 0) )
 	
 	# earliest_date				= 
 	dataframe['Appt_Date'] 		= pd.to_datetime(dataframe['Appt_Date'])
 	
 
-
-	dataframe = dataframe.drop(['Encounter_ID','Appt_Time','Appt_Made_Date',
-                  'Appt_Made_Time', 'Dept_Name', 'Dept_Abbr_3', 'Dept_Abbr_4'], axis = 1)
+	dataframe = dataframe.drop(['Encounter_ID','Appt_Date','Appt_Time','Appt_Made_Date',
+                  'Appt_Made_Time', 'Dept_Name', 'Dept_Abbr_3', 'Dept_Abbr_4'], axis=1)
 
 	dataframe.fillna(0, inplace = True)
 
-	#calculate bird eye distance 
 	return dataframe
 
 

@@ -28,17 +28,19 @@ import ml_metrics as metrics
 # print(blah["AUC"]) -> returns auc_object
 
 def main(model, X_test, y_test, model_name, file_name):
-	y_pred = model.predict(X_test)
-	modelMetrics =	{}
-	modelMetrics['Accuracy Score'] =  accuracy_score(y_test, y_pred)
+    y_pred = model.predict(X_test)
+    modelMetrics =	{}
+    modelMetrics['Accuracy Score'] =  accuracy_score(y_test, y_pred)
     modelMetrics['Confusion Matrix'] = confusion_matrix(y_test, y_pred)  
     modelMetrics['Classification Report'] = classification_report(y_test, y_pred)
-    modelMetrics['ROC AUC'] = roc_auc_score(y_test, classifier.predict(X_test))
+    modelMetrics['ROC AUC'] = roc_auc_score(y_test, model.predict(X_test))
 
-    logit_roc_auc = roc_auc_score(y_test, classifier.predict(X_test))
-    fpr, tpr, thresholds = roc_curve(y_test, classifier.predict_proba(X_test)[:,1])
+    print(type(modelMetrics['Accuracy Score']), type(modelMetrics['Confusion Matrix']), type(modelMetrics['Classification Report']), type(modelMetrics['ROC AUC']))
+
+    logit_roc_auc = roc_auc_score(y_test, model.predict(X_test))
+    fpr, tpr, thresholds = roc_curve(y_test, model.predict_proba(X_test)[:,1])
     plt.figure()
-    plt.plot(fpr, tpr, label='%s (area = %0.2f)' % model_name, logit_roc_auc)
+    plt.plot(fpr, tpr, label='{} (area = %{})'.format(model_name, round(logit_roc_auc,2)))
     plt.plot([0, 1], [0, 1],'r--')
     plt.xlim([0.0, 1.0])
     plt.ylim([0.0, 1.05])
@@ -46,9 +48,9 @@ def main(model, X_test, y_test, model_name, file_name):
     plt.ylabel('True Positive Rate')
     plt.title('Receiver operating characteristic')
     plt.legend(loc="lower right")
-    plt.savefig('../results/%s/Log_ROC' % file_name)
+    plt.savefig('%s/%s_Log_ROC' %(file_name, model_name))
 
     return modelMetrics
 
 if __name__ == '__main__':
-	main()
+    main()

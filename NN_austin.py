@@ -3,43 +3,72 @@ import sklearn
 import pandas as pd  
 import numpy as np 
 import matplotlib.pyplot as plt
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC  
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression, Ridge, Lasso
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.kernel_ridge import KernelRidge 
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score, roc_curve
-import dataprocessing
 import math
 import imblearn
 import os
 import datetime as dt 
 
+import dataprocessing
+from gen_results import main as make_results
+
 
 def record_file(args, df):
-    parameter_names = ['Test_', 'Hot_', 'Group_', 'NoCancel_', 'Over_']
+    parameter_names = ['Test', 'Hot', 'Group', 'NoCancel', 'Over']
     parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.over_sample]
-    file_name   = 'results'
-    file_ext     = ['_'+str(i)+str(j) for i in zip(parameter_names, parameters)]
-    file_name = filename + file_ext + '/'
+    file_name   = '../choamodel/results/'
+    file_ext     = '_'.join([str(i)+'_'+str(j) for i,j in zip(parameter_names, parameters)])
+    file_name = file_name + file_ext + '/'
 
+    print(file_name)
+    if not os.path.exists(file_name):
+        print('made')
+        os.makedirs(file_name)
 
-    if not os.path.exists('../results/'+file_name):
-        os.makedirs('../results/'+file_name)
+    with open(file_name+'results.txt', 'w') as f:
+        f.write('---This file was generate as a part of Senior Design by team 14 on {} ---'.format(dt.datetime.today()))
+        f.write('COMMAND LINE ARGUMENTS:\n '+', '.join([str(i)+': '+str(j) for i, j in zip(parameter_names, parameters)]))
 
-    with open('results.txt', permission) as f:
-        f.write('--This file was generate as a part of Senior Design by team 14 on {}'.format(dt.datetime.today()))
-    return 'results/'+file_name
+    return file_name
 
 #unique patients
 #arguments 
 #number of encounters
 #features
 
-def record_results(args, results):
+#converts the classification report into a dataframe
+def classification_report_csv(report):
+    report_data = []
+    lines = report.split('\n')
+    for line in lines[2:-3]:
+        row = {}
+        row_data = line.split('      ')
+        row['class'] = row_data[0]
+        row['precision'] = float(row_data[1])
+        row['recall'] = float(row_data[2])
+        row['f1_score'] = float(row_data[3])
+        row['support'] = float(row_data[4])
+        report_data.append(row)
+    dataframe = pd.DataFrame.from_dict(report_data)
 
+    return dataframe
+
+def record_results(model, results, file_name):
+
+    with open(file_name+'results.txt', 'a') as f:
+        f.write('\n\n----------Writing Results for __{}__ ----------\n'.format(model))
+        f.write('Accuracy Score:\t{}\n'.format(results['Accuracy Score']))
+        f.write('Confusion Matrix:\n{}\n'.format(np.array_str(results['Confusion Matrix'])))
+        # f.write('Classification Report:\n{}\n'.format(classification_report_csv(results['Classification Report'])))
+        f.write('ROC AUC Score:\t{}\n'.format(results['ROC AUC']))
 
 
 def main(args):
@@ -57,7 +86,7 @@ def main(args):
     y = df['No_Show']
 
     #record initial metrics about the dataset
-    file = record_file(args, df)
+    file_name = record_file(args, df)
 
     # over sampling the no show class to even class distribution
     # RYAN: over_sample will be a list of the inputs you write, indexed according to imput order, first being model method type
@@ -71,37 +100,83 @@ def main(args):
         tl = TomekLinks(return_indices=True, ratio='majority')
         X, y, id_tl = tl.fit_sample(X, y)
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=args.test_size)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=args.test_size, random_state = 1001)
 
     #build the model
     print('='*20)
     print('INITIALIZING MODELS')
 
-    model_types = ['SVM', 'log', 'dtree', 'rf', 'kernel_log', 'ridge_log']
+    # , 'kernel_ridge' causes a problem with memory for rn
+    # , 'ridge_reg', 'lasso_reg' causes a  problem with binary and continuous target space
+    model_types = ['log', 'dtree', 'rf', 'knn']
     for model in model_types:
         #start a classifier
         if model == 'SVM':
+            print('-'*20)
+            print('initializing {} model'.format(model))
             classifier = SVC()
+            print('-'*10)
+            print('fitting {} model'.format(model))
+            classifier.fit(X_train, y_train)
         elif model == 'log':
+            print('-'*10)
+            print('initializing {} model'.format(model))
             classifier = LogisticRegression()
+            print('-'*10)
+            print('fitting {} model'.format(model))
+            classifier.fit(X_train, y_train)
         elif model == 'dtree':
+            print('-'*10)
+            print('initializing {} model'.format(model))
             classifier = DecisionTreeClassifier()
+            print('-'*10)
+            print('fitting {} model'.format(model))
+            classifier.fit(X_train, y_train)
         elif model == 'rf':
+            print('-'*10)
+            print('initializing {} model'.format(model))
             classifier = RandomForestClassifier(n_estimators=100)
+            print('-'*10)
+            print('fitting {} model'.format(model))
+            classifier.fit(X_train, y_train)
         elif model == 'kernel_ridge':
-            classifier = KernelRidge(aplha = 1)
+            print('-'*10)
+            print('initializing {} model'.format(model))
+            classifier = KernelRidge()
+            print('-'*10)
+            print('fitting {} model'.format(model))
+            classifier.fit(X_train, y_train)
         elif model == 'ridge_reg':
-            classifier = 
-        elif model == 'lasso_reg'
-            print('something will go here')
+            print('-'*10)
+            print('initializing {} model'.format(model))
+            classifier = Ridge()
+            print('-'*10)
+            print('fitting {} model'.format(model))
+            classifier.fit(X_train, y_train)
+        elif model == 'lasso_reg':
+            print('-'*10)
+            print('initializing {} model'.format(model))
+            classifier = Lasso()
+            print('-'*10)
+            print('fitting {} model'.format(model))
+            classifier.fit(X_train, y_train)
         elif model == 'knn':
-            print('something will go here')
+            print('-'*10)
+            print('initializing {} model'.format(model))
+            classifier = KNeighborsClassifier()
+            print('-'*10)
+            print('fitting {} model'.format(model))
+            classifier.fit(X_train, y_train)
+
+        
+        results = make_results(classifier, X_test, y_test, model, file_name)
+        record_results(model, results, file_name)
 
     #fit the model
     print('='*20)
     print('FITTING MODEL')
     print('INTERNAL WORKINGS')
-    classifier.fit(X_train, y_train)
+    # classifier.fit(X_train, y_train)
     coefs = sorted([(i,round(j,3)) for i , j in zip(X_test.columns, classifier.coef_[0])], key = lambda x: abs(x[1]), reverse = True)
     if args.model =='log':
         for i in coefs:
@@ -165,7 +240,7 @@ if __name__ == '__main__':
     parser.add_argument('-over_sample', nargs = '*', default = None, 
             help = 'Fill with the oversampling method and then values to plug into method after word, seperate by spaces')
     args = parser.parse_args()
-
+    # print(parser)
     main(args)
 
 
