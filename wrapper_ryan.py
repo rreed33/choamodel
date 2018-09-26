@@ -14,6 +14,8 @@ for size in test_size:
 		for group in groups:
 			for can in no_cancel:
 				for typ in sample_type:
+					os.system("git reset --hard HEAD")
+					os.system("git pull origin master")
 					print('RUNNING {}'.format("python NN_austin.py -test_size {} -one_hot {} -group {} \
 								-no_cancel {} -sample_type {}".format(size, hot, group, can, typ)))
 					os.system("python NN_austin.py -test_size {} -one_hot {} -group {} \
