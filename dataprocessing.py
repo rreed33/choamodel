@@ -93,7 +93,7 @@ def main(group='all', no_cancel = False, one_hot = False):
 	df['Visit_Type_ID'].astype('category')
 
 	#determine one hot encoding for variables:
-	if one_hot:
+	if one_hot == 'True':
 		# use pd.concat to join the new columns with your original dataframe
 		df = pd.concat([df,pd.get_dummies(df['Dept_ID'], prefix='dept')],axis=1)
 		df = pd.concat([df,pd.get_dummies(df['Provider_ID'], prefix='provider')],axis=1)

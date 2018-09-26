@@ -256,7 +256,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-test_size', type = float, default = .2,
             help = 'the ratio of test to train in decimal form')
-    parser.add_argument('-one_hot', type = bool, default = False, 
+    parser.add_argument('-one_hot', type = str, default = 'False', 
             help = 'specify True to make the categorical variables into one hot vector embeddings')
     parser.add_argument('-group', default = 'all',
             help = 'pick all, historical, or nonhistorical to filter training data')
