@@ -20,6 +20,8 @@ import datetime as dt
 import dataprocessing
 from gen_results import main as make_results
 
+def strBool(string):
+
 
 def record_file(args, df):
     parameter_names = ['Test', 'Hot', 'Group', 'NoCancel', 'Over']
@@ -260,11 +262,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-test_size', type = float, default = .2,
             help = 'the ratio of test to train in decimal form')
-    parser.add_argument('-one_hot', default = False, 
+    parser.add_argument('-one_hot', type = bool, default = False, 
             help = 'specify True to make the categorical variables into one hot vector embeddings')
     parser.add_argument('-group', default = 'all',
             help = 'pick all, historical, or nonhistorical to filter training data')
-    parser.add_argument('-no_cancel', default = False, 
+    parser.add_argument('-no_cancel', type = bool, default = False, 
             help = 'Choose True to remove cancelled appointmet from dataset')
     parser.add_argument('-sample_type', nargs = '*', default = None, 
             help = 'Fill with the oversampling method and then values to plug into method after word, seperate by spaces')
