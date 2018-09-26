@@ -23,7 +23,7 @@ from gen_results import main as make_results
 
 def record_file(args, df):
     parameter_names = ['Test', 'Hot', 'Group', 'NoCancel', 'Over']
-    parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.over_sample]
+    parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.sample_type]
     file_name   = '../choamodel/results/'
     file_ext     = '_'.join([str(i)+'_'+str(j) for i,j in zip(parameter_names, parameters)]) +'_API_True'
     file_name = file_name + file_ext + '/'
@@ -93,15 +93,26 @@ def main(args):
 
     # over sampling the no show class to even class distribution
     # RYAN: over_sample will be a list of the inputs you write, indexed according to imput order, first being model method type
-    if args.over_sample:
+    if args.sample_type == 'overunder':
         # args.over_sample[1:] are the parameters to plug into 
         from imblearn.combine import SMOTETomek
         smt = SMOTETomek(ratio='auto')
         X, y = smt.fit_sample(X, y)
 
+    elif args.sample_type == 'underTomek':
         from imblearn.under_sampling import TomekLinks
         tl = TomekLinks(return_indices=True, ratio='majority')
-        X, y, id_tl = tl.fit_sample(X, y)
+        X, y = tl.fit_sample(X, y)
+
+    elif args.sample_type == 'underCentroid':
+        from imblearn.under_sampling import ClusterCentroids
+        cc = ClusterCentroids(ratio={0: 10})
+        X, y = cc.fit_sample(X, y)
+
+    elif args.sample_type == 'overSMOTE':
+        from imblearn.over_sampling import SMOTE
+        smote = SMOTE(ratio='minority')
+        X, y = smote.fit_sample(X, y)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=args.test_size, random_state = 1001)
 
@@ -255,7 +266,7 @@ if __name__ == '__main__':
             help = 'pick all, historical, or nonhistorical to filter training data')
     parser.add_argument('-no_cancel', default = False, 
             help = 'Choose True to remove cancelled appointmet from dataset')
-    parser.add_argument('-over_sample', nargs = '*', default = None, 
+    parser.add_argument('-sample_type', nargs = '*', default = None, 
             help = 'Fill with the oversampling method and then values to plug into method after word, seperate by spaces')
     args = parser.parse_args()
     # print(parser)
