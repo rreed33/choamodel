@@ -1,4 +1,4 @@
----This file was generate as a part of Senior Design by team 14 on 2018-09-26 01:43:45.772000 ---
+---This file was generate as a part of Senior Design by team 14 on 2018-09-26 08:26:12.801000 ---
 
 COMMAND LINE ARGUMENTS:
  Test: 0.5, Hot: True, Group: all, NoCancel: True, Over: ['over_under']
@@ -61,26 +61,26 @@ ROC AUC Score:	0.979231354789
 
 
 ----------Writing Results for __dtree_ALL__ ----------
-Accuracy Score:	0.968394286397
+Accuracy Score:	0.968650272198
 Confusion Matrix:
-[[51722   974]
- [  878  5023]]
+[[51731   965]
+ [  872  5029]]
 Classification Report:
              precision    recall  f1-score   support
 
           0       0.98      0.98      0.98     52696
-          1       0.84      0.85      0.84      5901
+          1       0.84      0.85      0.85      5901
 
 avg / total       0.97      0.97      0.97     58597
 
-ROC AUC Score:	0.916364141347
+ROC AUC Score:	0.916957925231
 
 
 ----------Writing Results for __dtree_HISTORICAL__ ----------
-Accuracy Score:	0.929787314706
+Accuracy Score:	0.930355991963
 Confusion Matrix:
-[[21897   974]
- [  878  2628]]
+[[21906   965]
+ [  872  2634]]
 Classification Report:
              precision    recall  f1-score   support
 
@@ -89,7 +89,7 @@ Classification Report:
 
 avg / total       0.93      0.93      0.93     26377
 
-ROC AUC Score:	0.853492740092
+ROC AUC Score:	0.854545171793
 
 
 ----------Writing Results for __dtree_NONHISTORICAL__ ----------
@@ -109,42 +109,42 @@ ROC AUC Score:	1.0
 
 
 ----------Writing Results for __rf_ALL__ ----------
-Accuracy Score:	0.965697902623
+Accuracy Score:	0.96513473386
 Confusion Matrix:
-[[52162   534]
- [ 1476  4425]]
+[[52118   578]
+ [ 1465  4436]]
 Classification Report:
              precision    recall  f1-score   support
 
           0       0.97      0.99      0.98     52696
-          1       0.89      0.75      0.81      5901
+          1       0.88      0.75      0.81      5901
 
 avg / total       0.96      0.97      0.96     58597
 
-ROC AUC Score:	0.86986965321
+ROC AUC Score:	0.870384209633
 
 
 ----------Writing Results for __rf_HISTORICAL__ ----------
-Accuracy Score:	0.924024718505
+Accuracy Score:	0.922849452174
 Confusion Matrix:
-[[22337   534]
- [ 1470  2036]]
+[[22293   578]
+ [ 1457  2049]]
 Classification Report:
              precision    recall  f1-score   support
 
-          0       0.94      0.98      0.96     22871
-          1       0.79      0.58      0.67      3506
+          0       0.94      0.97      0.96     22871
+          1       0.78      0.58      0.67      3506
 
 avg / total       0.92      0.92      0.92     26377
 
-ROC AUC Score:	0.77868521138
+ROC AUC Score:	0.779577259175
 
 
 ----------Writing Results for __rf_NONHISTORICAL__ ----------
-Accuracy Score:	0.999813780261
+Accuracy Score:	0.999751707014
 Confusion Matrix:
 [[29825     0]
- [    6  2389]]
+ [    8  2387]]
 Classification Report:
              precision    recall  f1-score   support
 
@@ -153,7 +153,7 @@ Classification Report:
 
 avg / total       1.00      1.00      1.00     32220
 
-ROC AUC Score:	0.998747390397
+ROC AUC Score:	0.998329853862
 
 
 ----------Writing Results for __knn_ALL__ ----------
