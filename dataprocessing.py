@@ -48,8 +48,8 @@ def edit(dataframe):
 	grouped_sibley				= dataframe.sort_values(['Appt_Date'])
 	grouped_sibley				= grouped_sibley.groupby("Sibley_ID")
 	dataframe['count_app'] 		= grouped_sibley.cumcount()
-	dataframe['count_miss']		= grouped_sibley['No_Show'].cumsum()
-	dataframe['count_cancel']	= grouped_sibley['Cancelled'].cumsum()
+	dataframe['count_miss']		= grouped_sibley['No_Show'].transform( lambda x: x.shift().fillna(0).cumsum())
+	dataframe['count_cancel']	= grouped_sibley['Cancelled'].transform( lambda x: x.shift().fillna(0).cumsum())
 	dataframe['diff_pay_count']	= grouped_sibley['Payor_Type_ID'].apply( lambda x: ((x - x.shift()) != 0).cumsum() )
 	
 	# Appt_Made_Time into its of year, month date
@@ -112,10 +112,16 @@ def main(group='all', no_cancel = False, one_hot = False):
 
 
 	#divide the group into historical and nonhistorical patients
+	df_count	= df.groupby('Sibley_ID').size
+	df_hist		= pd.DataFrame(values = [df_count.index,(df_count > 1)], columns = 'Sibley_ID, hist')
+	 
+	df			= df.merge(df_hist, on = 'Sibley_ID')
 	if group == 'historical':
-		df = df[df['count_app'] >= 1]
+		df = df[df['hist']]
+		# df = df[df['count_app'] >= 1]
 	elif group == 'nonhistorical':
-		df = df[df['count_app'] == 0]
+		df = df[~df['hist']]
+		# df = df[df['count_app'] == 0]
 
 	#get rid of cancellations
 	if no_cancel == 'True':
