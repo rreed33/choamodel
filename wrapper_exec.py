@@ -4,7 +4,7 @@
 import os
 
 test_size	= [.2, .5]
-one_hot		= [True, False]
+one_hot		= [False, True]
 groups		= ['all', 'historical', 'nonhistorical']
 no_cancel	= [True, False]
 sample_type	= ['over_under', 'underTomek', 'underCentroid', 'overSMOTE']

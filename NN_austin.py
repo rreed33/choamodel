@@ -79,12 +79,6 @@ def main(args):
     #EVERYTHING ABOVE HERE CAN BE IGNORED
     df = dataprocessing.main(args.group, args.no_cancel, args.one_hot)
 
-    df['Payor_Type_ID'].astype(int).astype('category')
-    df['Dept_ID'].astype('category')
-    df['Provider_ID'].astype('category')
-    df['Appt_Logistics_Type_ID'].astype('category')
-    df['Visit_Type_ID'].astype('category')
-
     #split the data into dependent and predictor
     X = df.drop(['No_Show','Sibley_ID'], axis=1)  
     y = df['No_Show']
