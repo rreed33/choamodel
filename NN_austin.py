@@ -20,7 +20,7 @@ import datetime as dt
 import dataprocessing
 from gen_results import main as make_results
 
-def strBool(string):
+# def strBool(string):
 
 
 def record_file(args, df):
