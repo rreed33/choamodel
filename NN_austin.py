@@ -84,7 +84,7 @@ def main(args):
     df['Visit_Type_ID'].astype('category')
 
     #split the data into dependent and predictor
-    X = df.drop('No_Show', axis=1)  
+    X = df.drop(['No_Show','Sibley_ID'] axis=1)  
     y = df['No_Show']
     print(X.dtypes)
 
