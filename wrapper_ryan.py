@@ -6,7 +6,7 @@ import os
 test_size	= [.2]
 one_hot		= [False]
 groups		= ['all', 'historical', 'nonhistorical']
-no_cancel	= [True, False]
+no_cancel	= ['True', 'False']
 sample_type	= ['none']
 
 for size in test_size:

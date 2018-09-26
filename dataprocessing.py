@@ -118,7 +118,7 @@ def main(group='all', no_cancel = False, one_hot = False):
 		df = df[df['count_app'] == 0]
 
 	#get rid of cancellations
-	if no_cancel:
+	if no_cancel == 'True':
 		df = df[(df['Appt_Status_ID'] == 4) | (df['Appt_Status_ID'] == 2)]
 
 	#df[['Payor_Type_ID']] = df[['Payor_Type_ID']].fillna(value=0)

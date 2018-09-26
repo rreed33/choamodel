@@ -260,7 +260,7 @@ if __name__ == '__main__':
             help = 'specify True to make the categorical variables into one hot vector embeddings')
     parser.add_argument('-group', default = 'all',
             help = 'pick all, historical, or nonhistorical to filter training data')
-    parser.add_argument('-no_cancel', type = bool, default = False, 
+    parser.add_argument('-no_cancel', type = str, default = 'False', 
             help = 'Choose True to remove cancelled appointmet from dataset')
     parser.add_argument('-sample_type', nargs = '*', default = None, 
             help = 'Fill with the oversampling method and then values to plug into method after word, seperate by spaces')
