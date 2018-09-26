@@ -1,4 +1,4 @@
----This file was generate as a part of Senior Design by team 14 on 2018-09-25 23:56:12.258000 ---
+---This file was generate as a part of Senior Design by team 14 on 2018-09-26 00:47:09.505000 ---
 
 COMMAND LINE ARGUMENTS:
  Test: 0.2, Hot: True, Group: all, NoCancel: True, Over: ['overSMOTE']
@@ -61,10 +61,10 @@ ROC AUC Score:	0.990858012317
 
 
 ----------Writing Results for __dtree_ALL__ ----------
-Accuracy Score:	0.968897990529
+Accuracy Score:	0.96876999872
 Confusion Matrix:
-[[20662   353]
- [  376  2048]]
+[[20663   352]
+ [  380  2044]]
 Classification Report:
              precision    recall  f1-score   support
 
@@ -73,14 +73,14 @@ Classification Report:
 
 avg / total       0.97      0.97      0.97     23439
 
-ROC AUC Score:	0.914043481436
+ROC AUC Score:	0.913242191457
 
 
 ----------Writing Results for __dtree_HISTORICAL__ ----------
-Accuracy Score:	0.930657281461
+Accuracy Score:	0.930371920479
 Confusion Matrix:
-[[8725  353]
- [ 376 1059]]
+[[8726  352]
+ [ 380 1055]]
 Classification Report:
              precision    recall  f1-score   support
 
@@ -89,7 +89,7 @@ Classification Report:
 
 avg / total       0.93      0.93      0.93     10513
 
-ROC AUC Score:	0.849546938534
+ROC AUC Score:	0.848208288522
 
 
 ----------Writing Results for __dtree_NONHISTORICAL__ ----------
@@ -109,35 +109,35 @@ ROC AUC Score:	1.0
 
 
 ----------Writing Results for __rf_ALL__ ----------
-Accuracy Score:	0.966295490422
+Accuracy Score:	0.965527539571
 Confusion Matrix:
-[[20811   204]
- [  586  1838]]
+[[20815   200]
+ [  608  1816]]
 Classification Report:
              precision    recall  f1-score   support
 
           0       0.97      0.99      0.98     21015
-          1       0.90      0.76      0.82      2424
+          1       0.90      0.75      0.82      2424
 
-avg / total       0.97      0.97      0.97     23439
+avg / total       0.96      0.97      0.96     23439
 
-ROC AUC Score:	0.874271736596
+ROC AUC Score:	0.869828952917
 
 
 ----------Writing Results for __rf_HISTORICAL__ ----------
-Accuracy Score:	0.924950061828
+Accuracy Score:	0.923237895938
 Confusion Matrix:
-[[8874  204]
- [ 585  850]]
+[[8878  200]
+ [ 607  828]]
 Classification Report:
              precision    recall  f1-score   support
 
           0       0.94      0.98      0.96      9078
-          1       0.81      0.59      0.68      1435
+          1       0.81      0.58      0.67      1435
 
 avg / total       0.92      0.92      0.92     10513
 
-ROC AUC Score:	0.784931292331
+ROC AUC Score:	0.777486099948
 
 
 ----------Writing Results for __rf_NONHISTORICAL__ ----------
