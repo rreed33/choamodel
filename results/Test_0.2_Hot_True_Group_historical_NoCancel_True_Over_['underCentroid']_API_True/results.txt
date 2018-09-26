@@ -1,4 +1,4 @@
----This file was generate as a part of Senior Design by team 14 on 2018-09-26 01:19:50.446000 ---
+---This file was generate as a part of Senior Design by team 14 on 2018-09-26 01:26:46.885000 ---
 
 COMMAND LINE ARGUMENTS:
  Test: 0.2, Hot: True, Group: historical, NoCancel: True, Over: ['underCentroid']
@@ -29,35 +29,35 @@ ROC AUC Score:	0.760779158123
 
 
 ----------Writing Results for __dtree_HISTORICAL__ ----------
-Accuracy Score:	0.937138522803
+Accuracy Score:	0.934483739452
 Confusion Matrix:
-[[8861  355]
- [ 308 1023]]
+[[8850  366]
+ [ 325 1006]]
 Classification Report:
              precision    recall  f1-score   support
 
-          0       0.97      0.96      0.96      9216
-          1       0.74      0.77      0.76      1331
+          0       0.96      0.96      0.96      9216
+          1       0.73      0.76      0.74      1331
 
-avg / total       0.94      0.94      0.94     10547
+avg / total       0.94      0.93      0.93     10547
 
-ROC AUC Score:	0.865037538022
+ROC AUC Score:	0.85805457402
 
 
 ----------Writing Results for __rf_HISTORICAL__ ----------
-Accuracy Score:	0.928036408457
+Accuracy Score:	0.930406750735
 Confusion Matrix:
-[[9031  185]
- [ 574  757]]
+[[8997  219]
+ [ 515  816]]
 Classification Report:
              precision    recall  f1-score   support
 
-          0       0.94      0.98      0.96      9216
-          1       0.80      0.57      0.67      1331
+          0       0.95      0.98      0.96      9216
+          1       0.79      0.61      0.69      1331
 
-avg / total       0.92      0.93      0.92     10547
+avg / total       0.93      0.93      0.93     10547
 
-ROC AUC Score:	0.77433575978
+ROC AUC Score:	0.794654928351
 
 
 ----------Writing Results for __knn_HISTORICAL__ ----------
