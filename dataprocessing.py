@@ -85,6 +85,12 @@ def main(group='all', no_cancel = False, one_hot = False):
 
 	#only look at those with history
 	# df = df[df['count_app'] == 1]
+	
+	df['Payor_Type_ID'].astype(int).astype('category')
+    df['Dept_ID'].astype('category')
+    df['Provider_ID'].astype('category')
+    df['Appt_Logistics_Type_ID'].astype('category')
+    df['Visit_Type_ID'].astype('category')
 
 	#determine one hot encoding for variables:
 	if one_hot:

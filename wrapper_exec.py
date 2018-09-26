@@ -14,10 +14,13 @@ for size in test_size:
 		for group in groups:
 			for can in no_cancel:
 				for typ in sample_type:
+					print('RUNNING {}'.format("python NN_austin.py -test_size {} -one_hot {} -group {} \
+								-no_cancel {} -sample_type {}".format(size, hot, group, can, typ)))
 					os.system("python NN_austin.py -test_size {} -one_hot {} -group {} \
 								-no_cancel {} -sample_type {}".format(size, hot, group, can, typ))
 					os.system("git add .")
 					os.system("git commit -m \"This commit: {}\"".format(', '.join([
 											str(size), str(hot), str(group), str(can), str(typ)])))
 					os.system("git push origin master")
+					print('\n'*5)
 
