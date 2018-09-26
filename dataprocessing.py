@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np  
 import matplotlib.pyplot as plt
 import math
+import sklearn.preprocessing
 
 def distance(lat1, lon1, lat2, lon2):
     radius = 6371 # km
@@ -26,7 +27,7 @@ def google_distance(df):
 	dist_df['Duration'] = scaler.fit_transform(dist_df['Duration'].values.reshape(-1,1))
 
 	#join the two dataframes on 'Encounter_ID'
-	df = df.merge(dist_df, on='Encounter_ID')
+	df = df.merge(dist_df, how = 'left', on='Encounter_ID')
 
 	return df
 
@@ -41,8 +42,11 @@ def edit(dataframe):
 	#first let's see how many appointments each person has had up until then and hwo many they miseed
 	dataframe['No_Show']		= (dataframe['Appt_Status_ID']==4).astype(int)
 	dataframe['Cancelled']		= ((dataframe['Appt_Status_ID']!=4)&(dataframe['Appt_Status_ID']!=2)).astype(int)
-
-	grouped_sibley				= dataframe.groupby('Sibley_ID', sort = 'Appt_Date')
+	
+	dataframe['Appt_Date'] 		= pd.to_datetime(dataframe['Appt_Date'])
+	#grouped_sibley				= dataframe.groupby('Sibley_ID', sort = 'Appt_Date')
+	grouped_sibley				= dataframe.sort_values(['Appt_Date'])
+	grouped_sibley				= grouped_sibley.groupby("Sibley_ID")
 	dataframe['count_app'] 		= grouped_sibley.cumcount()
 	dataframe['count_miss']		= grouped_sibley['No_Show'].cumsum()
 	dataframe['count_cancel']	= grouped_sibley['Cancelled'].cumsum()
@@ -61,9 +65,11 @@ def edit(dataframe):
 	dataframe['Appt_Made_Day']		= dataframe['Appt_Made_Date'].apply(lambda x: x.day)
 
 	dataframe = dataframe.drop(['Cancelled','Encounter_ID','Appt_Date','Appt_Time','Appt_Made_Date',
-                  'Appt_Made_Time', 'Dept_Name', 'Dept_Abbr_3', 'Dept_Abbr_4'], axis=1)
+                  'Appt_Made_Time', 'Dept_Name', 'Dept_Abbr_3', 'Dept_Abbr_4', 'Unnamed: 0'], axis=1)
 
-	dataframe.fillna(0, inplace = True)
+	dataframe['Payor_Type_ID'].fillna(0, inplace = True)
+	dataframe['Duration'].fillna((dataframe['Duration'].mean()), inplace = True)
+	dataframe['Distance'].fillna((dataframe['Distance'].mean()), inplace = True)
 
 	return dataframe
 
@@ -73,7 +79,6 @@ def main(group='all', no_cancel = False, one_hot = False):
 	df_dept = pd.read_csv('../data/DEPT_RAW.csv')
 	df = df.merge(df_dept, on = 'Dept_ID') 
 	df = google_distance(df)
-	df.sort_values(by = 'Appt_Date', inplace = True)
 	df = edit(df)
 
 	#only look at those with history
