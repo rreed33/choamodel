@@ -136,7 +136,7 @@ def main(group='all', no_cancel = False, one_hot = False, original = False):
                        'Num_No_Show_Encounters_Since',
                        'Num_Canceled_Encounters_AllTime',
                        'Num_No_Show_Encounters_AllTime',
-                       'Appt_Status_ID', 'count'],
+                       'Appt_Status_ID'],
                          axis = 1)
 
 	if original == 'True':

@@ -97,14 +97,18 @@ def main(args):
     df = dataprocessing.main(args.group, args.no_cancel, args.one_hot)
 
     #split the data into dependent and predictor
-    X = df.drop(['No_Show','Sibley_ID'], axis=1)  
+    X = df.drop(['No_Show','Sibley_ID', 'count'], axis=1)  
     y = df['No_Show']
+    filter_ = df['count']
     print(X.dtypes)
 
     #record initial metrics about the dataset
     file_name = record_file(args, df)
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=args.test_size, random_state = 1001)
+    X_train, X_test, y_train, y_test, filter_train, filter_test = train_test_split(X, y, filter_, test_size=args.test_size, random_state = 1001)
+    print(len(X_test), len(y_test), len(filter_test))
+    print(filter_test)
+
 
     # over sampling the no show class to even class distribution
     # RYAN: over_sample will be a list of the inputs you write, indexed according to imput order, first being model method type
@@ -212,8 +216,8 @@ def main(args):
 
         if args.group == 'all':
             #split the ALL segment into HISTORICAL AND NONHISTORICAL
-            hist_mask = X_test['count_app'] >= 1
-            nonhist_mask = X_test['count_app'] == 0
+            hist_mask = (filter_test > 1).values
+            nonhist_mask = filter_test == 1
 
             #write resutls for HISTORICAL SEGMENT
             print('HISTORICAL')
