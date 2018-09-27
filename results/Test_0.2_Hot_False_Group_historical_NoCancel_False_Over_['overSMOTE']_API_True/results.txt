@@ -1,0 +1,77 @@
+---This file was generate as a part of Senior Design by team 14 on 2018-09-27 01:48:04.491000 ---
+
+COMMAND LINE ARGUMENTS:
+ Test: 0.2, Hot: False, Group: historical, NoCancel: False, Over: ['overSMOTE']
+Training Group:	HISTORICAL
+Number of Encounters: 86984
+Number of Patients: 25089
+Number of Features: 31
+Number of No Shows:	9365
+
+Feature Names:
+Appt_Length, Dept_ID, Provider_ID, Appt_Logistics_Type_ID, Made_Lead_Days_Work, Made_Lead_Days_Calendar, Visit_Type_ID, Sibley_ID, Patient_Latitude, Patient_Longitude, Patient_Age_Bucket_ID, Payor_Type_ID, Dept_Location_Latitude, Dept_Location_Longitude, Duration, Distance, No_Show, count_app, count_miss, count_cancel, diff_pay_count, Appt_Made_Year, Appt_Made_Month, Appt_Made_Day, Appt_Made_Hour, Appt_Made_Min, Appt_Year, Appt_Month, Appt_Day, Appt_Time_Hour, Appt_Time_Min
+
+
+----------Writing Results for __log_HISTORICAL__ ----------
+Accuracy Score:	0.889233775938
+Confusion Matrix:
+[[15438    35]
+ [ 1892    32]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.89      1.00      0.94     15473
+          1       0.48      0.02      0.03      1924
+
+avg / total       0.85      0.89      0.84     17397
+
+ROC AUC Score:	0.507185005925
+Coefficients:
+[('count_miss', 0.642), ('count_cancel', 0.239), ('count_app', -0.132), ('Dept_Location_Latitude', -0.111), ('Appt_Logistics_Type_ID', -0.082), ('Patient_Latitude', -0.074), ('Payor_Type_ID', -0.067), ('Made_Lead_Days_Work', -0.066), ('Patient_Age_Bucket_ID', 0.052), ('Made_Lead_Days_Calendar', 0.051), ('Appt_Month', 0.044), ('diff_pay_count', 0.036), ('Dept_Location_Longitude', -0.034), ('Appt_Made_Month', -0.029), ('Appt_Made_Hour', 0.024), ('Patient_Longitude', -0.013), ('Appt_Time_Hour', -0.009), ('Visit_Type_ID', 0.007), ('Appt_Made_Year', 0.005), ('Appt_Length', -0.003), ('Dept_ID', 0.003), ('Duration', -0.002), ('Distance', -0.002), ('Provider_ID', 0.001), ('Appt_Made_Min', -0.001), ('Appt_Year', -0.001), ('Appt_Day', -0.001), ('Appt_Time_Min', 0.001), ('Appt_Made_Day', 0.0)]
+
+----------Writing Results for __dtree_HISTORICAL__ ----------
+Accuracy Score:	0.808587687532
+Confusion Matrix:
+[[13660  1813]
+ [ 1517   407]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.90      0.88      0.89     15473
+          1       0.18      0.21      0.20      1924
+
+avg / total       0.82      0.81      0.81     17397
+
+ROC AUC Score:	0.547183306902
+
+
+----------Writing Results for __rf_HISTORICAL__ ----------
+Accuracy Score:	0.890440880612
+Confusion Matrix:
+[[15454    19]
+ [ 1887    37]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.89      1.00      0.94     15473
+          1       0.66      0.02      0.04      1924
+
+avg / total       0.87      0.89      0.84     17397
+
+ROC AUC Score:	0.509001411889
+
+
+----------Writing Results for __knn_HISTORICAL__ ----------
+Accuracy Score:	0.876875323332
+Confusion Matrix:
+[[15222   251]
+ [ 1891    33]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.89      0.98      0.93     15473
+          1       0.12      0.02      0.03      1924
+
+avg / total       0.80      0.88      0.83     17397
+
+ROC AUC Score:	0.500464980713
