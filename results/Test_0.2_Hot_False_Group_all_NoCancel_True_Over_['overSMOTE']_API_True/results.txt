@@ -1,0 +1,207 @@
+---This file was generate as a part of Senior Design by team 14 on 2018-09-27 01:00:42.794000 ---
+
+COMMAND LINE ARGUMENTS:
+ Test: 0.2, Hot: False, Group: all, NoCancel: True, Over: ['overSMOTE']
+Training Group:	ALL
+Number of Encounters: 117193
+Number of Patients: 70765
+Number of Features: 31
+Number of No Shows:	11704
+
+Feature Names:
+Appt_Length, Dept_ID, Provider_ID, Appt_Logistics_Type_ID, Made_Lead_Days_Work, Made_Lead_Days_Calendar, Visit_Type_ID, Sibley_ID, Patient_Latitude, Patient_Longitude, Patient_Age_Bucket_ID, Payor_Type_ID, Dept_Location_Latitude, Dept_Location_Longitude, Duration, Distance, No_Show, count_app, count_miss, count_cancel, diff_pay_count, Appt_Made_Year, Appt_Made_Month, Appt_Made_Day, Appt_Made_Hour, Appt_Made_Min, Appt_Year, Appt_Month, Appt_Day, Appt_Time_Hour, Appt_Time_Min
+
+
+----------Writing Results for __log_ALL__ ----------
+Accuracy Score:	0.895644012117
+Confusion Matrix:
+[[20932    83]
+ [ 2363    61]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.90      1.00      0.94     21015
+          1       0.42      0.03      0.05      2424
+
+avg / total       0.85      0.90      0.85     23439
+
+ROC AUC Score:	0.510607728332
+Coefficients:
+[('count_miss', 0.763), ('count_cancel', 0.374), ('Payor_Type_ID', -0.153), ('count_app', -0.142), ('Dept_Location_Latitude', -0.137), ('Patient_Latitude', -0.1), ('Made_Lead_Days_Work', -0.098), ('Dept_Location_Longitude', -0.084), ('diff_pay_count', 0.078), ('Made_Lead_Days_Calendar', 0.075), ('Appt_Month', 0.034), ('Patient_Age_Bucket_ID', 0.032), ('Appt_Made_Month', -0.017), ('Appt_Made_Hour', 0.012), ('Appt_Logistics_Type_ID', 0.01), ('Appt_Length', -0.006), ('Visit_Type_ID', -0.006), ('Appt_Time_Hour', -0.006), ('Appt_Made_Year', 0.005), ('Dept_ID', 0.003), ('Appt_Day', -0.002), ('Patient_Longitude', 0.001), ('Duration', -0.001), ('Distance', -0.001), ('Appt_Made_Min', -0.001), ('Appt_Year', 0.001), ('Appt_Time_Min', 0.001), ('Provider_ID', 0.0), ('Appt_Made_Day', 0.0)]
+
+----------Writing Results for __log_HISTORICAL__ ----------
+Accuracy Score:	0.861504803577
+Confusion Matrix:
+[[8997   81]
+ [1375   60]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.87      0.99      0.93      9078
+          1       0.43      0.04      0.08      1435
+
+avg / total       0.81      0.86      0.81     10513
+
+ROC AUC Score:	0.516444588249
+Coefficients:
+[('count_miss', 0.763), ('count_cancel', 0.374), ('Payor_Type_ID', -0.153), ('count_app', -0.142), ('Dept_Location_Latitude', -0.137), ('Patient_Latitude', -0.1), ('Made_Lead_Days_Work', -0.098), ('Dept_Location_Longitude', -0.084), ('diff_pay_count', 0.078), ('Made_Lead_Days_Calendar', 0.075), ('Appt_Month', 0.034), ('Patient_Age_Bucket_ID', 0.032), ('Appt_Made_Month', -0.017), ('Appt_Made_Hour', 0.012), ('Appt_Logistics_Type_ID', 0.01), ('Appt_Length', -0.006), ('Visit_Type_ID', -0.006), ('Appt_Time_Hour', -0.006), ('Appt_Made_Year', 0.005), ('Dept_ID', 0.003), ('Appt_Day', -0.002), ('Patient_Longitude', 0.001), ('Duration', -0.001), ('Distance', -0.001), ('Appt_Made_Min', -0.001), ('Appt_Year', 0.001), ('Appt_Time_Min', 0.001), ('Provider_ID', 0.0), ('Appt_Made_Day', 0.0)]
+
+----------Writing Results for __log_NONHISTORICAL__ ----------
+Accuracy Score:	0.92341018103
+Confusion Matrix:
+[[11935     2]
+ [  988     1]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.92      1.00      0.96     11937
+          1       0.33      0.00      0.00       989
+
+avg / total       0.88      0.92      0.89     12926
+
+ROC AUC Score:	0.500421788031
+Coefficients:
+[('count_miss', 0.763), ('count_cancel', 0.374), ('Payor_Type_ID', -0.153), ('count_app', -0.142), ('Dept_Location_Latitude', -0.137), ('Patient_Latitude', -0.1), ('Made_Lead_Days_Work', -0.098), ('Dept_Location_Longitude', -0.084), ('diff_pay_count', 0.078), ('Made_Lead_Days_Calendar', 0.075), ('Appt_Month', 0.034), ('Patient_Age_Bucket_ID', 0.032), ('Appt_Made_Month', -0.017), ('Appt_Made_Hour', 0.012), ('Appt_Logistics_Type_ID', 0.01), ('Appt_Length', -0.006), ('Visit_Type_ID', -0.006), ('Appt_Time_Hour', -0.006), ('Appt_Made_Year', 0.005), ('Dept_ID', 0.003), ('Appt_Day', -0.002), ('Patient_Longitude', 0.001), ('Duration', -0.001), ('Distance', -0.001), ('Appt_Made_Min', -0.001), ('Appt_Year', 0.001), ('Appt_Time_Min', 0.001), ('Provider_ID', 0.0), ('Appt_Made_Day', 0.0)]
+
+----------Writing Results for __dtree_ALL__ ----------
+Accuracy Score:	0.832629378386
+Confusion Matrix:
+[[18912  2103]
+ [ 1820   604]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.91      0.90      0.91     21015
+          1       0.22      0.25      0.24      2424
+
+avg / total       0.84      0.83      0.84     23439
+
+ROC AUC Score:	0.574551769952
+
+
+----------Writing Results for __dtree_HISTORICAL__ ----------
+Accuracy Score:	0.78455245886
+Confusion Matrix:
+[[7871 1207]
+ [1058  377]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.88      0.87      0.87      9078
+          1       0.24      0.26      0.25      1435
+
+avg / total       0.79      0.78      0.79     10513
+
+ROC AUC Score:	0.564879484268
+
+
+----------Writing Results for __dtree_NONHISTORICAL__ ----------
+Accuracy Score:	0.871731394089
+Confusion Matrix:
+[[11041   896]
+ [  762   227]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.94      0.92      0.93     11937
+          1       0.20      0.23      0.21       989
+
+avg / total       0.88      0.87      0.88     12926
+
+ROC AUC Score:	0.577232018485
+
+
+----------Writing Results for __rf_ALL__ ----------
+Accuracy Score:	0.901488971372
+Confusion Matrix:
+[[20910   105]
+ [ 2204   220]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.90      1.00      0.95     21015
+          1       0.68      0.09      0.16      2424
+
+avg / total       0.88      0.90      0.87     23439
+
+ROC AUC Score:	0.542881322393
+
+
+----------Writing Results for __rf_HISTORICAL__ ----------
+Accuracy Score:	0.867116902882
+Confusion Matrix:
+[[9025   53]
+ [1344   91]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.87      0.99      0.93      9078
+          1       0.63      0.06      0.12      1435
+
+avg / total       0.84      0.87      0.82     10513
+
+ROC AUC Score:	0.528788171887
+
+
+----------Writing Results for __rf_NONHISTORICAL__ ----------
+Accuracy Score:	0.929444530404
+Confusion Matrix:
+[[11885    52]
+ [  860   129]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.93      1.00      0.96     11937
+          1       0.71      0.13      0.22       989
+
+avg / total       0.92      0.93      0.91     12926
+
+ROC AUC Score:	0.563039289604
+
+
+----------Writing Results for __knn_ALL__ ----------
+Accuracy Score:	0.887111224882
+Confusion Matrix:
+[[20740   275]
+ [ 2371    53]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.90      0.99      0.94     21015
+          1       0.16      0.02      0.04      2424
+
+avg / total       0.82      0.89      0.85     23439
+
+ROC AUC Score:	0.504389397719
+
+
+----------Writing Results for __knn_HISTORICAL__ ----------
+Accuracy Score:	0.851326928565
+Confusion Matrix:
+[[8908  170]
+ [1393   42]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.86      0.98      0.92      9078
+          1       0.20      0.03      0.05      1435
+
+avg / total       0.77      0.85      0.80     10513
+
+ROC AUC Score:	0.505270850461
+
+
+----------Writing Results for __knn_NONHISTORICAL__ ----------
+Accuracy Score:	0.916215379855
+Confusion Matrix:
+[[11832   105]
+ [  978    11]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.92      0.99      0.96     11937
+          1       0.09      0.01      0.02       989
+
+avg / total       0.86      0.92      0.88     12926
+
+ROC AUC Score:	0.50116308293
