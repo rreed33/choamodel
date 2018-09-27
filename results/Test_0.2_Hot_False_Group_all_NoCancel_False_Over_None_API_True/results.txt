@@ -189,3 +189,19 @@ Classification Report:
 avg / total       0.82      0.89      0.85     17482
 
 ROC AUC Score:	0.502026837114
+
+
+----------Writing Results for __knn_NONHISTORICAL__ ----------
+Accuracy Score:	0.948192641853
+Confusion Matrix:
+[[8835   55]
+ [ 428    5]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.95      0.99      0.97      8890
+          1       0.08      0.01      0.02       433
+
+avg / total       0.91      0.95      0.93      9323
+
+ROC AUC Score:	0.502680308726
