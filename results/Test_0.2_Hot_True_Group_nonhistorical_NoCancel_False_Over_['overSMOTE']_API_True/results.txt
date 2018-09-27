@@ -1,0 +1,77 @@
+---This file was generate as a part of Senior Design by team 14 on 2018-09-27 04:07:06.508000 ---
+
+COMMAND LINE ARGUMENTS:
+ Test: 0.2, Hot: True, Group: nonhistorical, NoCancel: False, Over: ['overSMOTE']
+Training Group:	NONHISTORICAL
+Number of Encounters: 47039
+Number of Patients: 47039
+Number of Features: 150
+Number of No Shows:	2339
+
+Feature Names:
+Appt_Length, Made_Lead_Days_Work, Made_Lead_Days_Calendar, Sibley_ID, Patient_Latitude, Patient_Longitude, Dept_Location_Latitude, Dept_Location_Longitude, Duration, Distance, No_Show, count_app, count_miss, count_cancel, diff_pay_count, Appt_Made_Year, Appt_Made_Month, Appt_Made_Day, Appt_Made_Hour, Appt_Made_Min, Appt_Year, Appt_Month, Appt_Day, Appt_Time_Hour, Appt_Time_Min, dept_1, dept_2, dept_3, dept_4, dept_5, dept_6, dept_7, dept_8, dept_9, dept_11, dept_12, dept_13, dept_14, dept_15, dept_16, dept_17, dept_18, dept_19, dept_20, dept_21, dept_22, dept_23, dept_24, dept_26, dept_27, provider_1, provider_6, provider_7, provider_8, provider_9, provider_10, provider_12, provider_14, provider_19, provider_20, provider_22, provider_23, provider_25, provider_26, provider_28, provider_30, provider_31, provider_32, provider_35, provider_36, provider_37, provider_38, provider_39, provider_42, provider_44, provider_45, provider_47, provider_48, provider_49, provider_50, provider_52, provider_53, provider_55, provider_56, provider_57, provider_61, provider_62, provider_63, provider_65, provider_66, provider_68, provider_69, provider_73, provider_76, provider_77, provider_78, provider_80, provider_81, provider_82, provider_83, provider_84, provider_85, provider_86, provider_89, appt_log_type_0, appt_log_type_1, appt_log_type_2, appt_log_type_3, appt_log_type_4, visit_type_1, visit_type_2, visit_type_3, visit_type_4, visit_type_7, visit_type_8, visit_type_9, visit_type_11, visit_type_12, visit_type_14, visit_type_15, visit_type_16, visit_type_17, visit_type_19, visit_type_20, visit_type_21, visit_type_22, visit_type_23, visit_type_24, visit_type_26, visit_type_27, visit_type_28, visit_type_29, visit_type_30, visit_type_31, visit_type_32, visit_type_36, visit_type_38, visit_type_39, visit_type_40, visit_type_42, age_bucket_0, age_bucket_1, age_bucket_2, age_bucket_3, age_bucket_4, payor_type_0.0, payor_type_1.0, payor_type_2.0, payor_type_3.0, payor_type_4.0
+
+
+----------Writing Results for __log_NONHISTORICAL__ ----------
+Accuracy Score:	0.950786564626
+Confusion Matrix:
+[[8926   36]
+ [ 427   19]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.95      1.00      0.97      8962
+          1       0.35      0.04      0.08       446
+
+avg / total       0.93      0.95      0.93      9408
+
+ROC AUC Score:	0.519291968181
+Coefficients:
+[('payor_type_0.0', 2.506), ('payor_type_2.0', -0.978), ('payor_type_1.0', -0.942), ('payor_type_4.0', -0.799), ('dept_2', -0.786), ('dept_9', 0.642), ('dept_14', 0.565), ('provider_73', 0.516), ('dept_8', 0.469), ('provider_49', -0.459), ('provider_82', -0.454), ('visit_type_21', 0.436), ('visit_type_16', -0.424), ('provider_19', 0.409), ('dept_24', -0.404), ('provider_23', -0.404), ('visit_type_8', -0.404), ('provider_83', 0.397), ('provider_48', -0.385), ('dept_22', -0.322), ('visit_type_11', 0.318), ('provider_20', 0.313), ('dept_21', 0.296), ('dept_13', -0.282), ('dept_3', 0.278), ('provider_37', 0.274), ('appt_log_type_4', -0.273), ('provider_38', -0.269), ('dept_26', -0.268), ('provider_77', 0.268), ('dept_5', -0.266), ('dept_12', 0.262), ('visit_type_30', -0.261), ('age_bucket_0', -0.26), ('provider_56', -0.257), ('age_bucket_4', 0.253), ('dept_6', -0.251), ('dept_7', -0.242), ('dept_19', 0.241), ('provider_25', 0.238), ('provider_52', 0.237), ('provider_55', -0.222), ('provider_1', 0.22), ('payor_type_3.0', 0.216), ('visit_type_4', 0.21), ('appt_log_type_3', 0.203), ('visit_type_23', -0.198), ('visit_type_15', -0.194), ('visit_type_22', 0.191), ('provider_22', 0.189), ('provider_86', -0.182), ('provider_61', -0.18), ('Patient_Latitude', -0.178), ('provider_57', -0.171), ('Made_Lead_Days_Work', -0.17), ('provider_9', 0.161), ('provider_68', 0.161), ('dept_11', 0.156), ('dept_18', -0.149), ('visit_type_1', 0.149), ('dept_27', 0.145), ('dept_16', 0.143), ('visit_type_42', 0.134), ('provider_32', -0.133), ('Patient_Longitude', 0.13), ('age_bucket_1', -0.13), ('Made_Lead_Days_Calendar', 0.129), ('dept_20', 0.128), ('dept_23', -0.124), ('appt_log_type_2', 0.124), ('visit_type_17', 0.121), ('provider_26', -0.115), ('provider_50', -0.114), ('provider_81', 0.109), ('Dept_Location_Longitude', -0.108), ('visit_type_9', -0.108), ('provider_10', 0.101), ('provider_89', -0.101), ('dept_1', -0.096), ('dept_4', -0.095), ('provider_30', -0.094), ('provider_39', 0.094), ('provider_78', -0.094), ('age_bucket_2', 0.093), ('provider_8', -0.092), ('provider_35', 0.091), ('provider_42', -0.091), ('appt_log_type_0', -0.087), ('visit_type_3', 0.075), ('visit_type_28', 0.075), ('provider_14', 0.074), ('visit_type_26', 0.074), ('provider_36', -0.073), ('provider_65', -0.072), ('provider_28', 0.07), ('provider_63', 0.069), ('provider_84', 0.069), ('visit_type_12', -0.067), ('provider_85', -0.064), ('provider_80', 0.059), ('dept_17', -0.056), ('provider_66', -0.052), ('provider_62', 0.05), ('Dept_Location_Latitude', -0.046), ('age_bucket_3', 0.046), ('provider_47', 0.039), ('provider_76', -0.038), ('provider_12', -0.035), ('provider_31', -0.035), ('provider_44', 0.035), ('provider_45', -0.034), ('appt_log_type_1', 0.034), ('visit_type_29', -0.032), ('visit_type_2', -0.026), ('Appt_Time_Hour', -0.021), ('visit_type_39', -0.021), ('dept_15', 0.017), ('Appt_Made_Hour', 0.014), ('Distance', 0.012), ('visit_type_19', -0.012), ('visit_type_27', -0.012), ('Duration', 0.011), ('provider_53', -0.011), ('Appt_Made_Month', 0.01), ('provider_7', -0.009), ('provider_69', -0.009), ('visit_type_7', -0.009), ('visit_type_31', -0.009), ('Appt_Length', 0.008), ('provider_6', 0.008), ('Appt_Month', 0.007), ('Appt_Made_Day', -0.005), ('Appt_Day', 0.004), ('visit_type_24', -0.004), ('visit_type_32', -0.003), ('Appt_Time_Min', 0.002), ('Appt_Made_Year', 0.001), ('Appt_Made_Min', 0.001), ('count_app', 0.0), ('count_miss', 0.0), ('count_cancel', 0.0), ('diff_pay_count', 0.0), ('Appt_Year', 0.0), ('visit_type_14', 0.0), ('visit_type_20', 0.0), ('visit_type_36', 0.0), ('visit_type_38', 0.0), ('visit_type_40', 0.0)]
+
+----------Writing Results for __dtree_NONHISTORICAL__ ----------
+Accuracy Score:	0.908907312925
+Confusion Matrix:
+[[8468  494]
+ [ 363   83]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.96      0.94      0.95      8962
+          1       0.14      0.19      0.16       446
+
+avg / total       0.92      0.91      0.91      9408
+
+ROC AUC Score:	0.565488515036
+
+
+----------Writing Results for __rf_NONHISTORICAL__ ----------
+Accuracy Score:	0.953125
+Confusion Matrix:
+[[8949   13]
+ [ 428   18]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.95      1.00      0.98      8962
+          1       0.58      0.04      0.08       446
+
+avg / total       0.94      0.95      0.93      9408
+
+ROC AUC Score:	0.519454087663
+
+
+----------Writing Results for __knn_NONHISTORICAL__ ----------
+Accuracy Score:	0.951743197279
+Confusion Matrix:
+[[8949   13]
+ [ 441    5]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.95      1.00      0.98      8962
+          1       0.28      0.01      0.02       446
+
+avg / total       0.92      0.95      0.93      9408
+
+ROC AUC Score:	0.504880096631
