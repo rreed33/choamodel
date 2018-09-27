@@ -11,6 +11,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.kernel_ridge import KernelRidge 
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score, roc_curve
 import math
 import imblearn
@@ -73,6 +74,22 @@ def record_results(model, results, file_name, group):
         f.write('Confusion Matrix:\n{}\n'.format(results['Confusion Matrix']))
         f.write('Classification Report:\n{}\n'.format(results['Classification Report']))
         f.write('ROC AUC Score:\t{}\n'.format(results['ROC AUC']))
+        if model =='log':
+        	f.write('Coefficients:\n{}'.format(results['coef']))
+
+
+def write_pred(file_name, model, X_train, y_test, y_pred):
+	#this function writes the prediciton with the whole predictors as well
+	file_name = '../data/predictions/'+file_name
+	test_results = X_train.copy()
+	if not os.path.exists(file_name):
+		print('made')
+		os.makedirs(file_name)
+
+	test_results['No_Show'] = y_test
+	test_results['predict'] = y_pred
+	test_results.to_csv(file_name+'/'+model+'_test_pred.csv')
+
 
 
 def main(args):
@@ -87,35 +104,36 @@ def main(args):
     #record initial metrics about the dataset
     file_name = record_file(args, df)
 
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=args.test_size, random_state = 1001)
+
     # over sampling the no show class to even class distribution
     # RYAN: over_sample will be a list of the inputs you write, indexed according to imput order, first being model method type
     if args.sample_type == 'overunder':
         # args.over_sample[1:] are the parameters to plug into 
         from imblearn.combine import SMOTETomek
         smt = SMOTETomek(ratio='auto')
-        X, y = smt.fit_sample(X, y)
+        X_train, y_train = smt.fit_sample(X_train, y_train)
 
     elif args.sample_type == 'underTomek':
         from imblearn.under_sampling import TomekLinks
         tl = TomekLinks(return_indices=True, ratio='majority')
-        X, y = tl.fit_sample(X, y)
+        X_train, y_train = tl.fit_sample(X_train, y_train)
 
     elif args.sample_type == 'underCentroid':
         from imblearn.under_sampling import ClusterCentroids
         cc = ClusterCentroids(ratio={0: 10})
-        X, y = cc.fit_sample(X, y)
+        X_train, y_train = cc.fit_sample(X_train, y_train)
 
     elif args.sample_type == 'overSMOTE':
         from imblearn.over_sampling import SMOTE
         smote = SMOTE(ratio='minority')
-        X, y = smote.fit_sample(X, y)
+        X_train, y_train = smote.fit_sample(X_train, y_train)
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=args.test_size, random_state = 1001)
+    
 
     #build the model
     print('='*20)
     print('INITIALIZING MODELS')
-
     # , 'kernel_ridge' causes a problem with memory for rn
     # , 'ridge_reg', 'lasso_reg' causes a  problem with binary and continuous target space
     model_types = ['log', 'dtree', 'rf', 'knn']
@@ -177,10 +195,20 @@ def main(args):
             print('-'*10)
             print('fitting {} model'.format(model))
             classifier.fit(X_train, y_train)
+        elif model == 'nn':
+            print('-'*10)
+            print('initializing {} model'.format(model))
+            classifier = MLPClassifier(solver='sgd', alpha=1e-5, hidden_layer_sizes=(30, 5), random_state=1)
+            print('-'*10)
+            print('fitting {} model'.format(model))
+            classifier.fit(X_train, y_train)
+
 
         print('GENERAL')
         results = make_results(classifier, X_test, y_test, model, file_name)
         record_results(model, results, file_name, args.group.upper())
+        write_pred(file_name.split('/')[-2], model, X_test, y_test, results['Predictions'])
+
 
         if args.group == 'all':
             #split the ALL segment into HISTORICAL AND NONHISTORICAL
@@ -264,6 +292,8 @@ if __name__ == '__main__':
             help = 'Choose True to remove cancelled appointmet from dataset')
     parser.add_argument('-sample_type', nargs = '*', default = None, 
             help = 'Fill with the oversampling method and then values to plug into method after word, seperate by spaces')
+    parser.add_argument('-original', type = str, default = 'False',
+    		help = 'Set this as True to reselt features to original values')
     args = parser.parse_args()
     # print(parser)
     main(args)

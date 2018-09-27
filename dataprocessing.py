@@ -50,19 +50,27 @@ def edit(dataframe):
 	dataframe['count_app'] 		= grouped_sibley.cumcount()
 	dataframe['count_miss']		= grouped_sibley['No_Show'].transform( lambda x: x.shift().fillna(0).cumsum())
 	dataframe['count_cancel']	= grouped_sibley['Cancelled'].transform( lambda x: x.shift().fillna(0).cumsum())
-	dataframe['diff_pay_count']	= grouped_sibley['Payor_Type_ID'].apply( lambda x: ((x - x.shift()) != 0).cumsum() )
-	
-	# Appt_Made_Time into its of year, month date
-	dataframe['Appt_Date'] 		= pd.to_datetime(dataframe['Appt_Date'])
-	dataframe['Appt_Year']		= dataframe['Appt_Date'].apply(lambda x: x.year)
-	dataframe['Appt_Month']		= dataframe['Appt_Date'].apply(lambda x: x.month)
-	dataframe['Appt_Day']		= dataframe['Appt_Date'].apply(lambda x: x.day)
+	dataframe['diff_pay_count']	= grouped_sibley['Payor_Type_ID'].apply( lambda x: ((x - x.shift()) != 0).cumsum() - 1 )
 
 	# Appt_Made_Time into its of year, month date
 	dataframe['Appt_Made_Date'] 	= pd.to_datetime(dataframe['Appt_Made_Date'])
 	dataframe['Appt_Made_Year']		= dataframe['Appt_Made_Date'].apply(lambda x: x.year)
 	dataframe['Appt_Made_Month']	= dataframe['Appt_Made_Date'].apply(lambda x: x.month)
 	dataframe['Appt_Made_Day']		= dataframe['Appt_Made_Date'].apply(lambda x: x.day)
+
+	dataframe['Appt_Made_Time'] 	= pd.to_datetime(dataframe['Appt_Made_Time'])
+	dataframe['Appt_Made_Hour']		= dataframe['Appt_Made_Time'].apply(lambda x: x.hour)
+	dataframe['Appt_Made_Min']		= dataframe['Appt_Made_Time'].apply(lambda x: x.minute)
+
+	# Appt_Made_Time into its of year, month date
+	dataframe['Appt_Date'] 		= pd.to_datetime(dataframe['Appt_Date'])
+	dataframe['Appt_Year']		= dataframe['Appt_Date'].apply(lambda x: x.year)
+	dataframe['Appt_Month']		= dataframe['Appt_Date'].apply(lambda x: x.month)
+	dataframe['Appt_Day']		= dataframe['Appt_Date'].apply(lambda x: x.day)
+
+	dataframe['Appt_Time']			= pd.to_datetime(dataframe['Appt_Time'])
+	dataframe['Appt_Time_Hour']		= dataframe['Appt_Time'].apply(lambda x: x.hour)
+	dataframe['Appt_Time_Min']		= dataframe['Appt_Time'].apply(lambda x: x.minute)
 
 	dataframe = dataframe.drop(['Cancelled','Encounter_ID','Appt_Date','Appt_Time','Appt_Made_Date',
                   'Appt_Made_Time', 'Dept_Name', 'Dept_Abbr_3', 'Dept_Abbr_4', 'Unnamed: 0'], axis=1)
@@ -73,10 +81,11 @@ def edit(dataframe):
 	dataframe['Patient_Latitude'].fillna((dataframe['Patient_Latitude'].mean()), inplace = True)
 	dataframe['Patient_Longitude'].fillna((dataframe['Patient_Longitude'].mean()), inplace = True)
 
+
 	return dataframe
 
 
-def main(group='all', no_cancel = False, one_hot = False):
+def main(group='all', no_cancel = False, one_hot = False, original = False):
 	df = pd.read_csv("../data/ENCOUNTERS_RAW.csv")
 	df_dept = pd.read_csv('../data/DEPT_RAW.csv')
 	df = df.merge(df_dept, on = 'Dept_ID') 
@@ -112,16 +121,11 @@ def main(group='all', no_cancel = False, one_hot = False):
 
 
 	#divide the group into historical and nonhistorical patients
-	# df_count	= df.groupby('Sibley_ID').size
-	# df_hist		= pd.DataFrame(values = [df_count.index,(df_count > 1)], columns = 'Sibley_ID, hist')
-	 
-	# df			= df.merge(df_hist, on = 'Sibley_ID')
 	df['count'] = df.groupby('Sibley_ID')['Sibley_ID'].transform('count')
-
 	if group == 'historical':
-		df = df[df['count'] > 1]
+		df = df[ df['count'] > 1 ]
 	elif group == 'nonhistorical':
-		df = df[df['count'] == 1]
+		df = df[ df['count'] == 1 ]
 
 	#get rid of cancellations
 	if no_cancel == 'True':
@@ -132,15 +136,25 @@ def main(group='all', no_cancel = False, one_hot = False):
                        'Num_No_Show_Encounters_Since',
                        'Num_Canceled_Encounters_AllTime',
                        'Num_No_Show_Encounters_AllTime',
-                       'Appt_Status_ID'],
+                       'Appt_Status_ID', 'count'],
                          axis = 1)
-                    
+
+	if original == 'True':
+		print('dropped')
+		df = df.drop(['count_app', 'count_cancel', 'count_miss', 'distance',
+					'Duration', 'Distance', 'diff_pay_count'], axis = 1)
+
 	print(df.keys())
 	df.to_csv('../data/choa_intermediate.csv')
 	return df
 
 if __name__ == '__main__':
-	main()
+	parser = argparse.ArgumentParser()
+	parser.add_argument('-original', type =str, default = 'False',
+			help = 'set equal to True to reduce data to original form')
+	args = parser.parse_args()
+
+	main(args.original)
 
 
 #TO DO:

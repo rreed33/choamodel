@@ -29,11 +29,16 @@ import ml_metrics as metrics
 
 def main(model, X_test, y_test, model_name, file_name):
     y_pred = model.predict(X_test)
+    print(y_pred)
     modelMetrics =	{}
     modelMetrics['Accuracy Score'] =  accuracy_score(y_test, y_pred)
     modelMetrics['Confusion Matrix'] = confusion_matrix(y_test, y_pred)  
     modelMetrics['Classification Report'] = classification_report(y_test, y_pred)
     modelMetrics['ROC AUC'] = roc_auc_score(y_test, model.predict(X_test))
+    modelMetrics['Predictions'] = y_pred
+    if model_name.lower() == 'log':
+        coefs = sorted([(i,round(j,3)) for i , j in zip(X_test.columns, model.coef_[0])], key = lambda x: abs(x[1]), reverse = True)
+        modelMetrics['coef'] = coefs
 
     print(modelMetrics['Accuracy Score'])
     print(modelMetrics['Confusion Matrix'])
