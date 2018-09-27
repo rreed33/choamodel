@@ -106,8 +106,6 @@ def main(args):
     file_name = record_file(args, df)
 
     X_train, X_test, y_train, y_test, filter_train, filter_test = train_test_split(X, y, filter_, test_size=args.test_size, random_state = 1001)
-    print(len(X_test), len(y_test), len(filter_test))
-    print(filter_test)
 
 
     # over sampling the no show class to even class distribution
