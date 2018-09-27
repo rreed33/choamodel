@@ -112,16 +112,16 @@ def main(group='all', no_cancel = False, one_hot = False):
 
 
 	#divide the group into historical and nonhistorical patients
-	df_count	= df.groupby('Sibley_ID').size
-	df_hist		= pd.DataFrame(values = [df_count.index,(df_count > 1)], columns = 'Sibley_ID, hist')
+	# df_count	= df.groupby('Sibley_ID').size
+	# df_hist		= pd.DataFrame(values = [df_count.index,(df_count > 1)], columns = 'Sibley_ID, hist')
 	 
-	df			= df.merge(df_hist, on = 'Sibley_ID')
+	# df			= df.merge(df_hist, on = 'Sibley_ID')
+	df['count'] = df.groupby('Sibley_ID')['Sibley_ID'].transform('count')
+
 	if group == 'historical':
-		df = df[df['hist']]
-		# df = df[df['count_app'] >= 1]
+		df = df[df['count'] > 1]
 	elif group == 'nonhistorical':
-		df = df[~df['hist']]
-		# df = df[df['count_app'] == 0]
+		df = df[df['count'] == 1]
 
 	#get rid of cancellations
 	if no_cancel == 'True':
