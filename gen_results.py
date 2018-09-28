@@ -56,7 +56,7 @@ def main(model, X_test, y_test, model_name, file_name, group):
     plt.ylabel('True Positive Rate')
     plt.title('Receiver operating characteristic')
     plt.legend(loc="lower right")
-    plt.savefig('%s/%s_Log_ROC' %(file_name, model_name+'_'group))
+    plt.savefig('%s/%s_Log_ROC' %(file_name, model_name+'_'+group))
 
     return modelMetrics
 

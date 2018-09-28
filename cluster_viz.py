@@ -19,8 +19,6 @@ def main(args):
 
 
 
-	return
-
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-test_size', type = float, default = .2,
