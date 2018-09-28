@@ -25,10 +25,10 @@ from gen_results import main as make_results
 
 
 def record_file(args, df):
-    parameter_names = ['Test', 'Hot', 'Group', 'NoCancel', 'Over']
-    parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.sample_type]
+    parameter_names = ['Test', 'Hot', 'Group', 'NoCancel', 'Over', 'Original']
+    parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.sample_type, args.original]
     file_name   = '../choamodel/results/'
-    file_ext     = '_'.join([str(i)+'_'+str(j) for i,j in zip(parameter_names, parameters)]) +'_API_True'
+    file_ext     = '_'.join([str(i)+'_'+str(j) for i,j in zip(parameter_names, parameters)])
     file_name = file_name + file_ext + '/'
 
     print(file_name)
@@ -44,27 +44,6 @@ def record_file(args, df):
         f.write('\nFeature Names:\n{}\n'.format(', '.join([i for i in df.keys()])))
     return file_name
 
-#unique patients
-#arguments 
-#number of encounters
-#features
-
-#converts the classification report into a dataframe
-def classification_report_csv(report):
-    report_data = []
-    lines = report.split('\n')
-    for line in lines[2:-3]:
-        row = {}
-        row_data = line.split('      ')
-        row['class'] = row_data[0]
-        row['precision'] = float(row_data[1])
-        row['recall'] = float(row_data[2])
-        row['f1_score'] = float(row_data[3])
-        row['support'] = float(row_data[4])
-        report_data.append(row)
-    dataframe = pd.DataFrame.from_dict(report_data)
-
-    return dataframe
 
 def record_results(model, results, file_name, group):
 
@@ -208,7 +187,7 @@ def main(args):
 
 
         print('GENERAL')
-        results = make_results(classifier, X_test, y_test, model, file_name)
+        results = make_results(classifier, X_test, y_test, model, file_name, args.group.upper())
         record_results(model, results, file_name, args.group.upper())
         write_pred(file_name.split('/')[-2], model, X_test, y_test, results['Predictions'])
 

@@ -27,7 +27,7 @@ import imblearn
 # blah = gen_results(model, x, y)
 # print(blah["AUC"]) -> returns auc_object
 
-def main(model, X_test, y_test, model_name, file_name):
+def main(model, X_test, y_test, model_name, file_name, group):
     y_pred = model.predict(X_test)
     print(y_pred)
     modelMetrics =	{}
@@ -56,7 +56,7 @@ def main(model, X_test, y_test, model_name, file_name):
     plt.ylabel('True Positive Rate')
     plt.title('Receiver operating characteristic')
     plt.legend(loc="lower right")
-    plt.savefig('%s/%s_Log_ROC' %(file_name, model_name))
+    plt.savefig('%s/%s_Log_ROC' %(file_name, model_name+'_'group))
 
     return modelMetrics
 
