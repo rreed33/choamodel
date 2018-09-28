@@ -25,7 +25,7 @@ from gen_results import main as make_results
 
 
 def record_file(args, df):
-    parameter_names = ['Test', 'Hot', 'Group', 'NoCancel', 'Over', 'Original']
+    parameter_names = ['-test_size', '-one_hot', '-group', '-no_cancel', '-sample_type', '-original']
     parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.sample_type, args.original]
     file_name   = '../choamodel/results/'
     file_ext     = '_'.join([str(i)+'_'+str(j) for i,j in zip(parameter_names, parameters)])
@@ -38,7 +38,7 @@ def record_file(args, df):
 
     with open(file_name+'results.txt', 'w') as f:
         f.write('---This file was generate as a part of Senior Design by team 14 on {} ---\n'.format(dt.datetime.today()))
-        f.write('\nCOMMAND LINE ARGUMENTS:\n '+', '.join([str(i)+': '+str(j) for i, j in zip(parameter_names, parameters)]))
+        f.write('\nCOMMAND LINE INPUT: \n' +'python NN_austin.py '+', '.join([str(i)+': '+str(j) for i, j in zip(parameter_names, parameters)]))
         f.write('\nTraining Group:\t{}\nNumber of Encounters: {}\nNumber of Patients: {}\nNumber of Features: {}'.format(args.group.upper(),len(df), len(np.unique(df['Sibley_ID'])), len(df.columns)))
         f.write('\nNumber of No Shows:\t{}\n'.format(sum(df['No_Show'])))
         f.write('\nFeature Names:\n{}\n'.format(', '.join([i for i in df.keys()])))

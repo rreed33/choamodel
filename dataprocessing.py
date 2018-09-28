@@ -78,6 +78,7 @@ def edit(dataframe):
 	dataframe['Payor_Type_ID'].fillna(0, inplace = True)
 	dataframe['Duration'].fillna((dataframe['Duration'].mean()), inplace = True)
 	dataframe['Distance'].fillna((dataframe['Distance'].mean()), inplace = True)
+	dataframe['distance'].fillna((dataframe['distance'].mean()), inplace = True)
 	dataframe['Patient_Latitude'].fillna((dataframe['Patient_Latitude'].mean()), inplace = True)
 	dataframe['Patient_Longitude'].fillna((dataframe['Patient_Longitude'].mean()), inplace = True)
 
