@@ -38,6 +38,7 @@ def main(model, X_test, y_test, model_name, file_name, group):
     modelMetrics['Predictions'] = y_pred
     if model_name.lower() == 'log':
         coefs = sorted([(i,round(j,3)) for i , j in zip(X_test.columns, model.coef_[0])], key = lambda x: abs(x[1]), reverse = True)
+        print(coefs)
         modelMetrics['coef'] = coefs
 
     print(modelMetrics['Accuracy Score'])

@@ -168,7 +168,7 @@ def main(args):
             print('-'*10)
             print('fitting {} model'.format(model))
             classifier.fit(X_train, y_train)
-        elif model == 'lasso_reg':
+        elif model == 'lasso':
             print('-'*10)
             print('initializing {} model'.format(model))
             classifier = Lasso()
@@ -280,7 +280,7 @@ if __name__ == '__main__':
     parser.add_argument('-sample_type', nargs = '*', default = None, 
             help = 'Fill with the oversampling method and then values to plug into method after word, seperate by spaces')
     parser.add_argument('-original', type = str, default = 'False',
-    		help = 'Set this as True to reselt features to original values')
+    		help = 'Set this as True to reset features to original values or special to only have engineered features')
     parser.add_argument('-generate_data', default = 'True', 
     		help = 'Generate data from scratch or read from choa_intermediate.csv')
     args = parser.parse_args()

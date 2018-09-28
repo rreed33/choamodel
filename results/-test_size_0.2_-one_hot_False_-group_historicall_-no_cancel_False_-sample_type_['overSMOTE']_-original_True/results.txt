@@ -1,0 +1,61 @@
+---This file was generate as a part of Senior Design by team 14 on 2018-09-28 14:09:32.897000 ---
+
+COMMAND LINE INPUT: 
+python NN_austin.py -test_size: 0.2, -one_hot: False, -group: historicall, -no_cancel: False, -sample_type: ['overSMOTE'], -original: True
+Training Group:	HISTORICALL
+Number of Encounters: 134023
+Number of Patients: 72128
+Number of Features: 22
+Number of No Shows:	11704
+
+Feature Names:
+Appt_Length, Dept_ID, Provider_ID, Appt_Logistics_Type_ID, Made_Lead_Days_Work, Made_Lead_Days_Calendar, Visit_Type_ID, Sibley_ID, Patient_Age_Bucket_ID, Payor_Type_ID, No_Show, Appt_Made_Year, Appt_Made_Month, Appt_Made_Day, Appt_Made_Hour, Appt_Made_Min, Appt_Year, Appt_Month, Appt_Day, Appt_Time_Hour, Appt_Time_Min, count
+
+
+----------Writing Results for __log_HISTORICALL__ ----------
+Accuracy Score:	0.916881178885
+Confusion Matrix:
+[[24575     8]
+ [ 2220     2]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.92      1.00      0.96     24583
+          1       0.20      0.00      0.00      2222
+
+avg / total       0.86      0.92      0.88     26805
+
+ROC AUC Score:	0.500287330934
+Coefficients:
+[('Payor_Type_ID', -0.13), ('Made_Lead_Days_Work', -0.073), ('Made_Lead_Days_Calendar', 0.057), ('Patient_Age_Bucket_ID', 0.031), ('Appt_Month', 0.023), ('Appt_Time_Hour', -0.013), ('Visit_Type_ID', -0.012), ('Appt_Length', -0.008), ('Appt_Logistics_Type_ID', 0.008), ('Appt_Made_Hour', 0.008), ('Appt_Made_Month', -0.007), ('Dept_ID', -0.003), ('Appt_Year', -0.002), ('Provider_ID', 0.001), ('Appt_Made_Year', 0.001), ('Appt_Made_Day', -0.001), ('Appt_Day', -0.001), ('Appt_Time_Min', 0.001), ('Appt_Made_Min', -0.0)]
+
+----------Writing Results for __dtree_HISTORICALL__ ----------
+Accuracy Score:	0.836000746129
+Confusion Matrix:
+[[22052  2531]
+ [ 1865   357]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.92      0.90      0.91     24583
+          1       0.12      0.16      0.14      2222
+
+avg / total       0.86      0.84      0.85     26805
+
+ROC AUC Score:	0.528854369186
+
+
+----------Writing Results for __rf_HISTORICALL__ ----------
+Accuracy Score:	0.917403469502
+Confusion Matrix:
+[[24554    29]
+ [ 2185    37]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.92      1.00      0.96     24583
+          1       0.56      0.02      0.03      2222
+
+avg / total       0.89      0.92      0.88     26805
+
+ROC AUC Score:	0.507735994077
