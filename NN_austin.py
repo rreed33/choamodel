@@ -73,7 +73,12 @@ def write_pred(file_name, model, X_train, y_test, y_pred):
 
 def main(args):
     #EVERYTHING ABOVE HERE CAN BE IGNORED
-    df = dataprocessing.main(args.group, args.no_cancel, args.one_hot)
+    if args.generate_data == 'True':
+        df = dataprocessing.main(args.group, args.no_cancel, args.one_hot, args.original)
+    elif args.generate_date == 'False':
+        df = pd.read_csv('choa_intermediate.csv')
+    else:
+        print("ERROR: CORRECT 'generate_data' ARGUMENT TO 'True' or 'False'" )
 
     #split the data into dependent and predictor
     X = df.drop(['No_Show','Sibley_ID', 'count'], axis=1)  
@@ -276,6 +281,8 @@ if __name__ == '__main__':
             help = 'Fill with the oversampling method and then values to plug into method after word, seperate by spaces')
     parser.add_argument('-original', type = str, default = 'False',
     		help = 'Set this as True to reselt features to original values')
+    parser.add_argument('-generate_data', default = 'True', 
+    		help = 'Generate data from scratch or read from choa_intermediate.csv')
     args = parser.parse_args()
     # print(parser)
     main(args)

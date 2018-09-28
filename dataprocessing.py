@@ -36,8 +36,8 @@ def edit(dataframe):
 
 
 	#get the bird's eye distance to from home to office
-	# dataframe['distance'] = np.vectorize(distance)(dataframe['Patient_Latitude'], -1*dataframe['Patient_Longitude'],
-						 				# dataframe['Dept_Location_Latitude'], -1*dataframe['Dept_Location_Longitude'] )
+	dataframe['distance'] = np.vectorize(distance)(dataframe['Patient_Latitude'], -1*dataframe['Patient_Longitude'],
+						 				dataframe['Dept_Location_Latitude'], -1*dataframe['Dept_Location_Longitude'] )
 
 	#first let's see how many appointments each person has had up until then and hwo many they miseed
 	dataframe['No_Show']		= (dataframe['Appt_Status_ID']==4).astype(int)
@@ -144,8 +144,9 @@ def main(group='all', no_cancel = False, one_hot = False, original = False):
 		print('dropped')
 		df = df.drop(['count_app', 'count_cancel', 'count_miss', 'distance',
 					'Duration', 'Distance', 'diff_pay_count'], axis = 1)
-
+	print('CHECK FEATURES:')
 	print(df.keys())
+	print()
 	df.to_csv('../data/choa_intermediate.csv')
 	return df
 
