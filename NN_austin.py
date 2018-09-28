@@ -76,7 +76,8 @@ def main(args):
     if args.generate_data == 'True':
         df = dataprocessing.main(args.group, args.no_cancel, args.one_hot, args.original)
     elif args.generate_date == 'False':
-        df = pd.read_csv('choa_intermediate.csv')
+        df = pd.read_csv('../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_intermediate.csv'.format(
+				args.group, args.no_cancel, args.one_hot, args.original)
     else:
         print("ERROR: CORRECT 'generate_data' ARGUMENT TO 'True' or 'False'" )
 
