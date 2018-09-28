@@ -138,7 +138,8 @@ def main(args):
     print('INITIALIZING MODELS')
     # , 'kernel_ridge' causes a problem with memory for rn
     # , 'ridge_reg', 'lasso_reg' causes a  problem with binary and continuous target space
-    model_types = ['log', 'dtree', 'rf', 'knn']
+    # , 'knn' but id takes so long
+    model_types = ['log', 'dtree', 'rf']
     for model in model_types:
         #start a classifier
         if model == 'SVM':
