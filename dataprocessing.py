@@ -149,7 +149,7 @@ def main(group='all', no_cancel = False, one_hot = False, original = False):
 	print(df.keys())
 	print()
 	df.to_csv('../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_intermediate.csv'.format(
-				args.group, args.no_cancel, args.one_hot, args.original))
+				group, no_cancel, one_hot, original))
 	return df
 
 if __name__ == '__main__':
