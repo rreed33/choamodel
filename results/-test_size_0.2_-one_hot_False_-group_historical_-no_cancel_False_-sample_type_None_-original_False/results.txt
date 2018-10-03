@@ -1,61 +1,61 @@
----This file was generate as a part of Senior Design by team 14 on 2018-09-28 14:30:31.730000 ---
+---This file was generate as a part of Senior Design by team 14 on 2018-10-01 01:11:22.603526 ---
 
 COMMAND LINE INPUT: 
 python NN_austin.py -test_size: 0.2, -one_hot: False, -group: historical, -no_cancel: False, -sample_type: None, -original: False
 Training Group:	HISTORICAL
 Number of Encounters: 86984
 Number of Patients: 25089
-Number of Features: 29
+Number of Features: 30
 Number of No Shows:	9365
 
 Feature Names:
-Appt_Length, Dept_ID, Provider_ID, Appt_Logistics_Type_ID, Made_Lead_Days_Work, Made_Lead_Days_Calendar, Visit_Type_ID, Sibley_ID, Patient_Age_Bucket_ID, Payor_Type_ID, Duration, Distance, distance, No_Show, count_app, count_miss, count_cancel, diff_pay_count, Appt_Made_Year, Appt_Made_Month, Appt_Made_Day, Appt_Made_Hour, Appt_Made_Min, Appt_Year, Appt_Month, Appt_Day, Appt_Time_Hour, Appt_Time_Min, count
+Appt_Length, Dept_ID, Provider_ID, Appt_Logistics_Type_ID, Made_Lead_Days_Work, Made_Lead_Days_Calendar, Visit_Type_ID, Sibley_ID, Patient_Age_Bucket_ID, Payor_Type_ID, PopDensity, Duration, Distance, distance, No_Show, count_app, count_miss, count_cancel, diff_pay_count, Appt_Made_Year, Appt_Made_Month, Appt_Made_Day, Appt_Made_Hour, Appt_Made_Min, Appt_Year, Appt_Month, Appt_Day, Appt_Time_Hour, Appt_Time_Min, count
 
 
 ----------Writing Results for __log_HISTORICAL__ ----------
-Accuracy Score:	0.889521181813
+Accuracy Score:	0.8895211818129563
 Confusion Matrix:
-[[15439    34]
- [ 1888    36]]
+[[15445    28]
+ [ 1894    30]]
 Classification Report:
              precision    recall  f1-score   support
 
           0       0.89      1.00      0.94     15473
-          1       0.51      0.02      0.04      1924
+          1       0.52      0.02      0.03      1924
 
 avg / total       0.85      0.89      0.84     17397
 
-ROC AUC Score:	0.508256821318
+ROC AUC Score:	0.5068914558832481
 Coefficients:
-[('count_miss', 0.695), ('count_cancel', 0.253), ('count_app', -0.139), ('Appt_Logistics_Type_ID', -0.077), ('Payor_Type_ID', -0.07), ('Made_Lead_Days_Work', -0.065), ('Made_Lead_Days_Calendar', 0.051), ('Patient_Age_Bucket_ID', 0.049), ('Appt_Month', 0.044), ('Appt_Made_Month', -0.03), ('diff_pay_count', 0.027), ('Appt_Made_Hour', 0.021), ('Appt_Time_Hour', -0.012), ('Visit_Type_ID', 0.008), ('Appt_Year', -0.004), ('Appt_Length', -0.003), ('Dept_ID', -0.002), ('Duration', -0.002), ('Distance', -0.002), ('Appt_Made_Year', 0.002), ('Provider_ID', 0.001), ('Appt_Made_Min', -0.001), ('Appt_Day', -0.001), ('Appt_Time_Min', 0.001), ('distance', 0.0), ('Appt_Made_Day', 0.0)]
+[('count_miss', 0.645), ('count_cancel', 0.239), ('count_app', -0.128), ('Appt_Logistics_Type_ID', -0.082), ('Payor_Type_ID', -0.07), ('Made_Lead_Days_Work', -0.06), ('Patient_Age_Bucket_ID', 0.053), ('Made_Lead_Days_Calendar', 0.048), ('Appt_Month', 0.044), ('diff_pay_count', 0.028), ('Appt_Made_Month', -0.028), ('Appt_Made_Hour', 0.023), ('Appt_Time_Hour', -0.013), ('Visit_Type_ID', 0.009), ('Appt_Year', -0.004), ('Dept_ID', -0.003), ('Appt_Length', -0.002), ('Duration', -0.002), ('Distance', -0.002), ('Appt_Made_Year', 0.002), ('Provider_ID', 0.001), ('Appt_Made_Min', -0.001), ('Appt_Time_Min', 0.001), ('PopDensity', -0.0), ('distance', 0.0), ('Appt_Made_Day', 0.0), ('Appt_Day', -0.0)]
 
 ----------Writing Results for __dtree_HISTORICAL__ ----------
-Accuracy Score:	0.804334080589
+Accuracy Score:	0.8099097545553832
 Confusion Matrix:
-[[13583  1890]
- [ 1514   410]]
+[[13667  1806]
+ [ 1501   423]]
 Classification Report:
              precision    recall  f1-score   support
 
           0       0.90      0.88      0.89     15473
-          1       0.18      0.21      0.19      1924
+          1       0.19      0.22      0.20      1924
 
-avg / total       0.82      0.80      0.81     17397
+avg / total       0.82      0.81      0.82     17397
 
-ROC AUC Score:	0.545474727421
+ROC AUC Score:	0.5515675115381055
 
 
 ----------Writing Results for __rf_HISTORICAL__ ----------
-Accuracy Score:	0.890325918262
+Accuracy Score:	0.8901534747370237
 Confusion Matrix:
-[[15462    11]
- [ 1897    27]]
+[[15456    17]
+ [ 1894    30]]
 Classification Report:
              precision    recall  f1-score   support
 
           0       0.89      1.00      0.94     15473
-          1       0.71      0.01      0.03      1924
+          1       0.64      0.02      0.03      1924
 
-avg / total       0.87      0.89      0.84     17397
+avg / total       0.86      0.89      0.84     17397
 
-ROC AUC Score:	0.506661174122
+ROC AUC Score:	0.5072469137776447
