@@ -12,7 +12,7 @@ from sklearn.kernel_ridge import KernelRidge
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score, roc_curve
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score, roc_curve, make_scorer, accuracy_score, precision_score, recall_score, f1_score
 import math
 import imblearn
 import os
@@ -21,6 +21,9 @@ from sklearn import tree
 
 import dataprocessing
 from gen_results import main as make_results
+
+from sklearn.model_selection import StratifiedKFold, cross_validate
+##K-folds with equal class distribtions
 
 # def strBool(string):
 
@@ -74,7 +77,13 @@ def write_pred(file_name, model, X_train, y_test, y_pred):
 
 def main(args):
     #EVERYTHING ABOVE HERE CAN BE IGNORED
-    df = dataprocessing.main(args.group, args.no_cancel, args.one_hot, args.original, args.generate_data, args.office)
+    if args.generate_data == 'True':
+        df = dataprocessing.main(args.group, args.no_cancel, args.one_hot, args.original)
+    elif args.generate_data == 'False':
+        df = pd.read_csv('../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_intermediate.csv'.format(
+				args.group, args.no_cancel, args.one_hot, args.original))
+    else:
+        print("ERROR: CORRECT 'generate_data' ARGUMENT TO 'True' or 'False'" )
 
     #split the data into dependent and predictor
     X = df.drop(['No_Show','Sibley_ID', 'count'], axis=1)  
@@ -119,6 +128,7 @@ def main(args):
     # , 'kernel_ridge' causes a problem with memory for rn
     # , 'ridge_reg', 'lasso_reg' causes a  problem with binary and continuous target space
     # , 'knn' but id takes so long
+
     model_types = ['log', 'dtree', 'rf', 'logL1', 'SVM']
     for model in model_types:
         #start a classifier
@@ -136,6 +146,13 @@ def main(args):
             print('-'*10)
             print('fitting {} model'.format(model))
             classifier.fit(X_train, y_train)
+        elif model == 'logL1':
+            print('-'*10)
+            print('initializing {} model'.format(model))
+            classifier = LogisticRegression(penalty='l1')
+            print('-'*10)
+            print('fitting {} model'.format(model))
+            classifier.fit(X_train, y_train)
         elif model == 'dtree':
             print('-'*10)
             print('initializing {} model'.format(model))
@@ -145,8 +162,9 @@ def main(args):
             classifier.fit(X_train, y_train)
             classifier = DecisionTreeClassifier()  
             classifier.fit(X_train, y_train) 
-            # tree.export_graphviz(classifier, out_file='tree.dot',
-            #          feature_names = df.columns[:27])
+            tree.export_graphviz(classifier, out_file='tree.dot',
+                     feature_names = X.columns)
+
         elif model == 'rf':
             print('-'*10)
             print('initializing {} model'.format(model))
@@ -207,6 +225,14 @@ def main(args):
 
         print('GENERAL')
         results = make_results(classifier, X_test, y_test, model, file_name, args.group.upper())
+        scoring = ['accuracy', 'precision', 'recall', 'f1']
+        kfold = StratifiedKFold(n_splits=10, random_state=42)
+        scores = cross_validate(estimator=classifier,
+                                          X=X,
+                                          y=y,
+                                          cv=kfold,
+                                          scoring=scoring)
+        print("Scores ", scores)
         record_results(model, results, file_name, args.group.upper())
         write_pred(file_name.split('/')[-2], model, X_test, y_test, results['Predictions'])
 
