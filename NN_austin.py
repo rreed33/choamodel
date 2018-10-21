@@ -29,7 +29,7 @@ from sklearn.model_selection import StratifiedKFold, cross_validate
 
 
 def record_file(args, df):
-    parameter_names = ['-test_size', '-one_hot', '-group', '-no_cancel', '-sample_type', '-original']
+    parameter_names = ['-test_size', '-one_hot', '-group', '-no_cancel', '-sample_type', '-original', '-office']
     parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.sample_type, args.original]
     file_name   = '../choamodel/results/'
     file_ext     = '_'.join([str(i)+'_'+str(j) for i,j in zip(parameter_names, parameters)])
@@ -128,7 +128,8 @@ def main(args):
     # , 'kernel_ridge' causes a problem with memory for rn
     # , 'ridge_reg', 'lasso_reg' causes a  problem with binary and continuous target space
     # , 'knn' but id takes so long
-    model_types = ['log', 'logL1', 'dtree', 'rf']
+
+    model_types = ['log', 'dtree', 'rf', 'logL1', 'SVM']
     for model in model_types:
         #start a classifier
         if model == 'SVM':
@@ -163,7 +164,15 @@ def main(args):
             classifier.fit(X_train, y_train) 
             tree.export_graphviz(classifier, out_file='tree.dot',
                      feature_names = X.columns)
+
         elif model == 'rf':
+            print('-'*10)
+            print('initializing {} model'.format(model))
+            classifier = RandomForestClassifier(n_estimators=100)
+            print('-'*10)
+            print('fitting {} model'.format(model))
+            classifier.fit(X_train, y_train)
+        elif model == 'svm':
             print('-'*10)
             print('initializing {} model'.format(model))
             classifier = RandomForestClassifier(n_estimators=100)
@@ -201,7 +210,14 @@ def main(args):
         elif model == 'nn':
             print('-'*10)
             print('initializing {} model'.format(model))
-            classifier = MLPClassifier(solver='sgd', alpha=1e-5, hidden_layer_sizes=(30, 5), random_state=1)
+            classifier = MLPClassifier(solver='sgd', alpha=1e-10, hidden_layer_sizes=(5, 3), random_state=1, activation = 'tanh')
+            print('-'*10)
+            print('fitting {} model'.format(model))
+            classifier.fit(X_train, y_train)
+        elif model == 'logL1':
+            print('-'*10)
+            print('initializing {} model'.format(model))
+            classifier = LogisticRegression(penalty='l1')
             print('-'*10)
             print('fitting {} model'.format(model))
             classifier.fit(X_train, y_train)
@@ -228,12 +244,12 @@ def main(args):
 
             #write resutls for HISTORICAL SEGMENT
             print('HISTORICAL')
-            results_hist = make_results(classifier, X_test[hist_mask], y_test[hist_mask], model, file_name)
+            results_hist = make_results(classifier, X_test[hist_mask], y_test[hist_mask], model, file_name, args.group)
             record_results(model, results_hist, file_name, 'HISTORICAL')
 
             #write results for NONHISTORICAL SEGMENT
             print('NONHISTORICAL')
-            results_nonhist = make_results(classifier, X_test[nonhist_mask], y_test[nonhist_mask], model, file_name)
+            results_nonhist = make_results(classifier, X_test[nonhist_mask], y_test[nonhist_mask], model, file_name, args.group)
             record_results(model, results_nonhist, file_name, 'NONHISTORICAL')
     
     #fit the model
@@ -307,6 +323,8 @@ if __name__ == '__main__':
     		help = 'Set this as True to reset features to original values or special to only have engineered features')
     parser.add_argument('-generate_data', default = 'True', 
     		help = 'Generate data from scratch or read from choa_intermediate.csv')
+    parser.add_argument('-office', type = str, default = 'all',
+            help = 'Type in the name of the office as present in the data')
     args = parser.parse_args()
     # print(parser)
     main(args)
