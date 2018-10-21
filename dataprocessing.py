@@ -24,21 +24,38 @@ def google_distance(df):
 	#read in the file with all the distances and times for each encounter and scale 
 	dist_df = pd.read_csv('../data/google_dist.csv')
 	scaler = sklearn.preprocessing.MinMaxScaler()
-	dist_df['Distance'] = scaler.fit_transform(dist_df['Distance'].values.reshape(-1,1))
-	dist_df['Duration'] = scaler.fit_transform(dist_df['Duration'].values.reshape(-1,1))
+	dist_df['distance_google'] = scaler.fit_transform(dist_df['Distance'].values.reshape(-1,1))
+	dist_df['duration_google'] = scaler.fit_transform(dist_df['Duration'].values.reshape(-1,1))
 
 	#join the two dataframes on 'Encounter_ID'
 	df = df.merge(dist_df, how = 'left', on='Encounter_ID')
 
 	return df
 
+def house_income(df):
+	#this function joins the choa data, the reverse geocode data and census income data
+	df_zip = 	pd.read_csv("../data/rev_geocode_all.csv")
+	df_income = pd.read_csv("../data/income_by_zip.csv")
+
+	df_income['Annual payroll ($1,000)'].astype(float)
+	df_income['Paid employees for pay period including March 12 (number)'].astype(int)
+	df_income['mod_income'] = 1000 * df_income['Annual payroll ($1,000)']/ df_income['Paid employees for pay period including March 12 (number)']
+	df_income.drop([i for i in df_income.keys() if i not in ['ID2', 'mod_income']])
+	print(df_income['mod_income'])
+
+	df = df.merge(df_zip, on = "Encounter_ID", how = "left")
+	df = df.merge(df_income, left_on = "Address", right_on = "Id2", how = "left")
+
+	return df 
+
 def edit(dataframe):
 	#use this function to organize all the edits to the raw data before processing
 
 
 	#get the bird's eye distance to from home to office
-	dataframe['distance'] = np.vectorize(distance)(dataframe['Patient_Latitude'], -1*dataframe['Patient_Longitude'],
+	dataframe['distance_bird'] = np.vectorize(distance)(dataframe['Patient_Latitude'], -1*dataframe['Patient_Longitude'],
 						 				dataframe['Dept_Location_Latitude'], -1*dataframe['Dept_Location_Longitude'] )
+	dataframe['distance_google'].fillna(dataframe['distance_bird'])
 
 	#first let's see how many appointments each person has had up until then and hwo many they miseed
 	dataframe['No_Show']		= (dataframe['Appt_Status_ID']==4).astype(int)
@@ -78,8 +95,8 @@ def edit(dataframe):
 
 	dataframe['Payor_Type_ID'].fillna(0, inplace = True)
 	dataframe['Duration'].fillna((dataframe['Duration'].mean()), inplace = True)
-	dataframe['Distance'].fillna((dataframe['Distance'].mean()), inplace = True)
-	dataframe['distance'].fillna((dataframe['distance'].mean()), inplace = True)
+	dataframe['distance_google'].fillna((dataframe['distance_google'].mean()), inplace = True)
+	dataframe['distance_bird'].fillna((dataframe['distance_bird'].mean()), inplace = True)
 	dataframe['Patient_Latitude'].fillna((dataframe['Patient_Latitude'].mean()), inplace = True)
 	dataframe['Patient_Longitude'].fillna((dataframe['Patient_Longitude'].mean()), inplace = True)
 
@@ -93,12 +110,13 @@ def main(group='all', no_cancel = False, one_hot = False, original = False, gene
 				group, no_cancel, one_hot, original, office)
 
 	if generate_data == 'False' and os.path.exists(intermediate_data_name):
+		print('\nREADING FROM FILE ', intermediate_data_name, '\n--------------------\n\n')
 		df = pd.read_csv(intermediate_data_name)
 		return df
 	elif generate_data == 'False' and not os.path.exists(intermediate_data_name):
-		print('THIS FORMULATION HAS NOT BEEN RECORDED\nCONTINUING TO GENERATE DATA FROM RAW DATA\n--------------------\n\n\n')
+		print('\nTHIS FORMULATION HAS NOT BEEN RECORDED\nCONTINUING TO GENERATE DATA FROM RAW DATA\n--------------------\n\n')
 	elif generate_data == 'True' and os.path.exists(intermediate_data_name):
-		print('THIS FORMULATION COULD HAVE DONE FASTER IF YOU HAD SET generate_date TO False\n----------\n\n\n')
+		print('\nTHIS FORMULATION COULD HAVE BEEN DONE FASTER IF YOU HAD SET generate_date TO False\n--------------------\n\n')
 
 	#focus on the chosen location
 	
@@ -117,6 +135,8 @@ def main(group='all', no_cancel = False, one_hot = False, original = False, gene
 	df = df.merge(df_dept, on = 'Dept_ID') 
 	df = google_distance(df)
 	df = edit(df)
+	df = house_income(df)
+
 
 
 	df['Payor_Type_ID'].astype(int).astype('category')
@@ -166,23 +186,24 @@ def main(group='all', no_cancel = False, one_hot = False, original = False, gene
 
 	if original == 'True':
 		print('dropped')
-		df = df.drop(['count_app', 'count_cancel', 'count_miss', 'distance',
-					'Duration', 'Distance', 'diff_pay_count'], axis = 1)
+		df = df.drop(['count_app', 'count_cancel', 'count_miss', 'distance_bird',
+					'duration_google', 'distance_google', 'diff_pay_count'], axis = 1)
 
 	print('CHECK FEATURES:')
 	print(df.keys())
 	print()
-	df.to_csv('../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_intermediate.csv'.format(
-				group, no_cancel, one_hot, original))
+	df.to_csv('../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_office_{}intermediate.csv'.format(
+				group, no_cancel, one_hot, original, office))
 	return df
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-original', type =str, default = 'False',
 			help = 'set equal to True to reduce data to original form')
+	parser.add_argument('-office', type = str, default = 'macon')
 	args = parser.parse_args()
 
-	main(args.original)
+	main(args.original, args.office)
 
 
 #TO DO:
