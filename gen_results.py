@@ -16,6 +16,7 @@ from sklearn.metrics import roc_curve
 import dataprocessing
 import math
 import imblearn
+from sklearn.model_selection import StratifiedKFold, cross_validate
 # import ml_metrics as metrics
 
 # THIS SCRIPT WILL WRITE AND SAVE ALL OF THE RELATIVE ANALYTICS FOR EACH OF THE MODELS
@@ -45,6 +46,14 @@ def main(model, X_test, y_test, model_name, file_name, group):
     print(modelMetrics['Confusion Matrix'])
     print(modelMetrics['Classification Report'])
     print(modelMetrics['ROC AUC'])
+    # scoring = ['accuracy', 'precision', 'recall', 'f1']
+    # kfold = StratifiedKFold(n_splits=10, random_state=42)
+    # scores = cross_validate(estimator=model,
+    #                                   X=X_test,
+    #                                   y=y_test,
+    #                                   cv=kfold,
+    #                                   scoring=scoring)
+    # print("Scores ", scores)
     # print(modelMetrics['Classification Report'])
     logit_roc_auc = roc_auc_score(y_test, model.predict(X_test))
     fpr, tpr, thresholds = roc_curve(y_test, model.predict_proba(X_test)[:,1])
