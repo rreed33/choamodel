@@ -22,6 +22,9 @@ from sklearn import tree
 import dataprocessing
 from gen_results import main as make_results
 
+from sklearn.model_selection import StratifiedKFold
+##K-folds with equal class distribtions
+
 # def strBool(string):
 
 
@@ -152,7 +155,7 @@ def main(args):
             classifier = DecisionTreeClassifier()  
             classifier.fit(X_train, y_train) 
             tree.export_graphviz(classifier, out_file='tree.dot',
-                     feature_names = df.columns[:27])
+                     feature_names = X.columns)
         elif model == 'rf':
             print('-'*10)
             print('initializing {} model'.format(model))
