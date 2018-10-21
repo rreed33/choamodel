@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 import sklearn.preprocessing
+import os
 
 def distance(lat1, lon1, lat2, lon2):
     radius = 6371 # km
@@ -86,15 +87,37 @@ def edit(dataframe):
 	return dataframe
 
 
-def main(group='all', no_cancel = False, one_hot = False, original = False):
+def main(group='all', no_cancel = False, one_hot = False, original = False, generate_data = 'False', office = 'all'):
+	# READ FROM INTERMEDIATE FILES OF SIMILAR DATA FORMULATIONS
+	intermediate_data_name = '../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_office_{}intermediate.csv'.format(
+				group, no_cancel, one_hot, original, office)
+
+	if generate_data == 'False' and os.path.exists(intermediate_data_name):
+		df = pd.read_csv(intermediate_data_name)
+		return df
+	elif generate_data == 'False' and not os.path.exists(intermediate_data_name):
+		print('THIS FORMULATION HAS NOT BEEN RECORDED\nCONTINUING TO GENERATE DATA FROM RAW DATA\n--------------------\n\n\n')
+	elif generate_data == 'True' and os.path.exists(intermediate_data_name):
+		print('THIS FORMULATION COULD HAVE DONE FASTER IF YOU HAD SET generate_date TO False\n----------\n\n\n')
+
+	#focus on the chosen location
+	
+	office_code = {'augusta': 4, 'canton': 5,'columbus':6,'cumming':7,'dalton':8,'emory':9,'gainesville':11,'hamilton mill':12,
+						'johns creek':13,'macon':14,'marietta':15,'newnan':16,'scottish rite':17,'snellville':18,'stockbridge':19,
+						'thomasville':20,'tifton':21,'valdosta':22,'villa rica':23,'egleston':24,'lawrenceville':26,'rockdale':27}
+
 	df = pd.read_csv("../data/ENCOUNTERS_RAW.csv")
 	df_dept = pd.read_csv('../data/DEPT_RAW.csv')
+
+	if office in office_code.keys():
+		df = df[df['Dept_ID']==office_code[office]]
+	elif office not in office_code.keys() and office != 'all':
+		print('ERROR: a specific office was not identified. will continue model with full data set')
+		
 	df = df.merge(df_dept, on = 'Dept_ID') 
 	df = google_distance(df)
 	df = edit(df)
 
-	#only look at those with history
-	# df = df[df['count_app'] == 1]
 
 	df['Payor_Type_ID'].astype(int).astype('category')
 	df['Dept_ID'].astype('category')
@@ -145,6 +168,7 @@ def main(group='all', no_cancel = False, one_hot = False, original = False):
 		print('dropped')
 		df = df.drop(['count_app', 'count_cancel', 'count_miss', 'distance',
 					'Duration', 'Distance', 'diff_pay_count'], axis = 1)
+
 	print('CHECK FEATURES:')
 	print(df.keys())
 	print()
