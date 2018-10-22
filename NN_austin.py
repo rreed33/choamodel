@@ -29,8 +29,8 @@ from sklearn.model_selection import StratifiedKFold, cross_validate
 
 
 def record_file(args, df):
-    parameter_names = ['-test_size', '-one_hot', '-group', '-no_cancel', '-sample_type', '-original']
-    parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.sample_type, args.original]
+    parameter_names = ['-test_size', '-one_hot', '-group', '-no_cancel', '-sample_type', '-original', '-cv']
+    parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.sample_type, args.original, args.cv]
     file_name   = '../choamodel/results/'
     file_ext     = '_'.join([str(i)+'_'+str(j) for i,j in zip(parameter_names, parameters)])
     file_name = file_name + file_ext + '/'
@@ -49,7 +49,7 @@ def record_file(args, df):
     return file_name
 
 
-def record_results(model, results, file_name, group):
+def record_results(model, results, file_name, group, cv):
 
     with open(file_name+'results.txt', 'a') as f:
         f.write('\n\n----------Writing Results for __{}_{}__ ----------\n'.format(model, group))
@@ -59,7 +59,14 @@ def record_results(model, results, file_name, group):
         f.write('ROC AUC Score:\t{}\n'.format(results['ROC AUC']))
         if model =='log':
         	f.write('Coefficients:\n{}'.format(results['coef']))
-
+        if cv > 0:
+            metrics = ['train_Show_Precision', 'test_Show_Precision', 'train_NoShow_Precision', 'test_NoShow_Precision',
+                    'train_Show_Recall', 'test_Show_Recall', 'train_NoShow_Recall', 'test_NoShow_Recall',
+                    'train_Show_F1', 'test_Show_F1', 'train_NoShow_F1', 'test_NoShow_F1']
+            f.write('CV metrics - array, avg, std\n')
+            for i in metrics:
+                arr = results['CV Scores'][i]
+                f.write('{}\nArray: {}\nAverage: {}\nStd: {}\n\n'.format(i, arr, np.mean(arr), np.std(arr)))
 
 def write_pred(file_name, model, X_train, y_test, y_pred):
 	#this function writes the prediciton with the whole predictors as well
@@ -208,16 +215,8 @@ def main(args):
 
 
         print('GENERAL')
-        results = make_results(classifier, X_test, y_test, model, file_name, args.group.upper())
-        scoring = ['accuracy', 'precision', 'recall', 'f1']
-        kfold = StratifiedKFold(n_splits=10, random_state=42)
-        scores = cross_validate(estimator=classifier,
-                                          X=X,
-                                          y=y,
-                                          cv=kfold,
-                                          scoring=scoring)
-        print("Scores ", scores)
-        record_results(model, results, file_name, args.group.upper())
+        results = make_results(classifier, X_test, y_test, model, file_name, args.group.upper(), args.cv)
+        record_results(model, results, file_name, args.group.upper(), args.cv)
         write_pred(file_name.split('/')[-2], model, X_test, y_test, results['Predictions'])
 
 
@@ -307,6 +306,8 @@ if __name__ == '__main__':
     		help = 'Set this as True to reset features to original values or special to only have engineered features')
     parser.add_argument('-generate_data', default = 'True', 
     		help = 'Generate data from scratch or read from choa_intermediate.csv')
+    parser.add_argument('-cv', type = int, default = 0,
+            help = 'Enter an int > 0 to run Stratified k-fold cross validation')
     args = parser.parse_args()
     # print(parser)
     main(args)
