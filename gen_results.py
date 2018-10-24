@@ -24,8 +24,8 @@ from sklearn.cross_validation import cross_val_predict
 # THIS SCRIPT WILL WRITE AND SAVE ALL OF THE RELATIVE ANALYTICS FOR EACH OF THE MODELS
 
 
-# INPUTS:   FITTED MODEL, dataframe of test data from X, dataframe of test data from y
-# OUTPUTS:  METIRCS AND VISUALIZATION FOR EACH MODEL, SAVE TO ../choamodel/results/
+# INPUTS: 	FITTED MODEL, dataframe of test data from X, dataframe of test data from y
+# OUTPUTS: 	METIRCS AND VISUALIZATION FOR EACH MODEL, SAVE TO ../choamodel/results/
 
 # blah = gen_results(model, x, y)
 # print(blah["AUC"]) -> returns auc_object
@@ -33,7 +33,7 @@ from sklearn.cross_validation import cross_val_predict
 def main(model, X_test, y_test, model_name, file_name, group, cv):
     y_pred = model.predict(X_test)
     # print(y_pred)
-    modelMetrics =  {}
+    modelMetrics =	{}
     modelMetrics['Accuracy Score'] =  accuracy_score(y_test, y_pred)
     modelMetrics['Confusion Matrix'] = confusion_matrix(y_test, y_pred)  
     modelMetrics['Classification Report'] = classification_report(y_test, y_pred)
