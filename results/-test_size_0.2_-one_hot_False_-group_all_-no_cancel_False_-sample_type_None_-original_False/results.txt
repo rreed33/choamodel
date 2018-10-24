@@ -1,0 +1,30 @@
+---This file was generate as a part of Senior Design by team 14 on 2018-10-21 15:28:01.440481 ---
+
+COMMAND LINE INPUT: 
+python NN_austin.py -test_size: 0.2, -one_hot: False, -group: all, -no_cancel: False, -sample_type: None, -original: False
+Training Group:	ALL
+Number of Encounters: 134023
+Number of Patients: 72128
+Number of Features: 30
+Number of No Shows:	11704
+
+Feature Names:
+Appt_Length, Dept_ID, Provider_ID, Appt_Logistics_Type_ID, Made_Lead_Days_Work, Made_Lead_Days_Calendar, Visit_Type_ID, Sibley_ID, Patient_Age_Bucket_ID, Payor_Type_ID, PopDensity, Duration, Distance, distance, No_Show, count_app, count_miss, count_cancel, diff_pay_count, Appt_Made_Year, Appt_Made_Month, Appt_Made_Day, Appt_Made_Hour, Appt_Made_Min, Appt_Year, Appt_Month, Appt_Day, Appt_Time_Hour, Appt_Time_Min, count
+
+
+----------Writing Results for __log_ALL__ ----------
+Accuracy Score:	0.9165081141578064
+Confusion Matrix:
+[[24535    48]
+ [ 2190    32]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.92      1.00      0.96     24583
+          1       0.40      0.01      0.03      2222
+
+avg / total       0.88      0.92      0.88     26805
+
+ROC AUC Score:	0.5062244356478116
+Coefficients:
+[('count_miss', 0.697), ('count_cancel', 0.298), ('count_app', -0.124), ('Payor_Type_ID', -0.123), ('Made_Lead_Days_Work', -0.094), ('Made_Lead_Days_Calendar', 0.072), ('diff_pay_count', 0.049), ('Appt_Month', 0.028), ('Appt_Time_Hour', -0.019), ('Appt_Made_Month', -0.014), ('Visit_Type_ID', -0.011), ('Appt_Made_Hour', 0.011), ('Appt_Length', -0.007), ('Patient_Age_Bucket_ID', 0.007), ('Appt_Logistics_Type_ID', -0.003), ('Dept_ID', -0.002), ('Duration', -0.002), ('Appt_Year', -0.002), ('Provider_ID', 0.001), ('Distance', -0.001), ('Appt_Made_Year', 0.001), ('Appt_Made_Day', -0.001), ('Appt_Day', -0.001), ('Appt_Time_Min', 0.001), ('PopDensity', -0.0), ('distance', 0.0), ('Appt_Made_Min', -0.0)]
