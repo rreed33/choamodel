@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 import sklearn.preprocessing
+from sklearn.cluster import KMeans
 import os
 
 def distance(lat1, lon1, lat2, lon2):
@@ -184,6 +185,14 @@ def main(group='all', no_cancel = False, one_hot = False, original = False, gene
                        'Dept_Location_Longitude', 'Dept_Location_Latitude'],
                          axis = 1)
 
+	#runs kmeans if clusters arg > 0
+	if clusters > 0:
+		print('='*5 + 'CLUSTERING' + '='*5)
+		X = df.drop(['No_Show','Sibley_ID', 'count','Dept_ID','Sibley_ID'], axis=1)
+		kmeans = KMeans(n_clusters=10, random_state=0).fit(X)
+		df['cluster'] = kmeans.labels_
+		df = df[ df['cluster'] == 2]
+
 	if original == 'True':
 		print('dropped')
 		df = df.drop(['count_app', 'count_cancel', 'count_miss', 'distance_bird',
@@ -192,8 +201,8 @@ def main(group='all', no_cancel = False, one_hot = False, original = False, gene
 	print('CHECK FEATURES:')
 	print(df.keys())
 	print()
-	df.to_csv('../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_office_{}intermediate.csv'.format(
-				group, no_cancel, one_hot, original, office))
+	df.to_csv('../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_office_{}_cv_{}_clusters_{}_intermediate.csv'.format(
+				group, no_cancel, one_hot, original, office, cv, clusters))
 	return df
 
 if __name__ == '__main__':

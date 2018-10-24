@@ -29,8 +29,8 @@ from sklearn.model_selection import StratifiedKFold, cross_validate
 
 
 def record_file(args, df):
-    parameter_names = ['-test_size', '-one_hot', '-group', '-no_cancel', '-sample_type', '-original', -'office', '-cv']
-    parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.sample_type, args.original, args.office, args.cv]
+    parameter_names = ['-test_size', '-one_hot', '-group', '-no_cancel', '-sample_type', '-original', -'office', '-cv', '-clusters']
+    parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.sample_type, args.original, args.office, args.cv, args.clusters]
     file_name   = '../choamodel/results/'
     file_ext     = '_'.join([str(i)+'_'+str(j) for i,j in zip(parameter_names, parameters)])
     file_name = file_name + file_ext + '/'
@@ -85,10 +85,10 @@ def write_pred(file_name, model, X_train, y_test, y_pred):
 def main(args):
     #EVERYTHING ABOVE HERE CAN BE IGNORED
     if args.generate_data == 'True':
-        df = dataprocessing.main(args.group, args.no_cancel, args.one_hot, args.original)
+        df = dataprocessing.main(args.group, args.no_cancel, args.one_hot, args.original, args.clusters)
     elif args.generate_data == 'False':
-        df = pd.read_csv('../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_intermediate.csv'.format(
-				args.group, args.no_cancel, args.one_hot, args.original))
+        df = pd.read_csv('../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_office_{}_cv_{}_clusters{}_intermediate.csv'.format(
+				args.group, args.no_cancel, args.one_hot, args.original, args.office, args.cv, args.clusters))
     else:
         print("ERROR: CORRECT 'generate_data' ARGUMENT TO 'True' or 'False'" )
 
@@ -232,6 +232,13 @@ def main(args):
 
         print('GENERAL')
         results = make_results(classifier, X_test, y_test, model, file_name, args.group.upper(), args.cv)
+        kfold = StratifiedKFold(n_splits=10, random_state=42)
+        scores = cross_validate(estimator=classifier,
+                                          X=X,
+                                          y=y,
+                                          cv=kfold,
+                                          scoring=scoring)
+        print("Scores ", scores)
         record_results(model, results, file_name, args.group.upper(), args.cv)
         write_pred(file_name.split('/')[-2], model, X_test, y_test, results['Predictions'])
 
@@ -326,6 +333,8 @@ if __name__ == '__main__':
             help = 'Type in the name of the office as present in the data')
     parser.add_argument('-cv', type = int, default = 0,
             help = 'Enter an int > 0 to run Stratified k-fold cross validation')
+    parser.add_argument('-clusters', type = int, default = 0,
+            help = 'Enter an int > 0 to run K-means clustering')
     args = parser.parse_args()
     # print(parser)
     main(args)
