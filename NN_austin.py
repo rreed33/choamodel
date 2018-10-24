@@ -3,7 +3,7 @@ import sklearn
 import pandas as pd  
 import numpy as np 
 import matplotlib.pyplot as plt
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import KNeighborsClassifier, LocalOutlierFactor
 from sklearn.neural_network import MLPClassifier
 from sklearn.svm import SVC  
 from sklearn.linear_model import LogisticRegression, Ridge, Lasso
@@ -136,7 +136,7 @@ def main(args):
     # , 'ridge_reg', 'lasso_reg' causes a  problem with binary and continuous target space
     # , 'knn' but id takes so long
 
-    model_types = ['log', 'dtree', 'rf', 'logL1', 'SVM']
+    model_types = ['naive', 'log', 'dtree', 'rf', 'logL1', 'anamoly']
     for model in model_types:
         #start a classifier
         if model == 'SVM':
@@ -225,6 +225,28 @@ def main(args):
             print('-'*10)
             print('initializing {} model'.format(model))
             classifier = LogisticRegression(penalty='l1')
+            print('-'*10)
+            print('fitting {} model'.format(model))
+            classifier.fit(X_train, y_train)
+        elif model == 'anamoly':
+            print('-'*10)
+            print('initializing {} model'.format(model))
+            classifier = LocalOutlierFactor( 
+                n_neighbors=100, contamination=.09)
+            print('-'*10)
+            print('fitting {} model'.format(model))
+            pred = classifier.fit_predict(X)
+            pred = [1 if i == -1 else 0 for i in pred]
+            print accuracy_score(y, pred)
+            print confusion_matrix(y, pred)  
+            print classification_report(y, pred)
+            print roc_auc_score(y, pred)
+            continue
+        elif model == 'naive':
+            from sklearn.naive_bayes import GaussianNB
+            print('-'*10)
+            print('initializing {} model'.format(model))
+            classifier = GaussianNB()
             print('-'*10)
             print('fitting {} model'.format(model))
             classifier.fit(X_train, y_train)

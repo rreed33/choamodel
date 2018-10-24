@@ -25,11 +25,17 @@ def google_distance(df):
 	#read in the file with all the distances and times for each encounter and scale 
 	dist_df = pd.read_csv('../data/google_dist.csv')
 	scaler = sklearn.preprocessing.MinMaxScaler()
-	dist_df['distance_google'] = scaler.fit_transform(dist_df['Distance'].values.reshape(-1,1))
-	dist_df['duration_google'] = scaler.fit_transform(dist_df['Duration'].values.reshape(-1,1))
 
 	#join the two dataframes on 'Encounter_ID'
 	df = df.merge(dist_df, how = 'left', on='Encounter_ID')
+
+	df['distance_google']	= df['Distance']
+	df['duration_google']	= df['Duration']
+ 	df['distance_google'].fillna((df['distance_google'].mean()), inplace = True)
+	df['duration_google'].fillna((df['duration_google'].mean()), inplace = True)
+ 	df['distance_google'] = scaler.fit_transform(df['distance_google'].values.reshape(-1,1))
+	df['duration_google'] = scaler.fit_transform(df['duration_google'].values.reshape(-1,1))
+ 	df.drop(['Distance', 'Duration'], axis=1, inplace = True)
 
 	return df
 
@@ -39,7 +45,7 @@ def house_income(df):
 	df_income = pd.read_csv("../data/income_by_zip.csv")
 
 	df_income['Annual payroll ($1,000)'].astype(float)
-	df_income['Paid employees for pay period including March 12 (number)'].astype(int)
+	df_income['Paid employees for pay period including March 12 (number)'].astype(float)
 	df_income['mod_income'] = 1000 * df_income['Annual payroll ($1,000)']/ df_income['Paid employees for pay period including March 12 (number)']
 	df_income.drop([i for i in df_income.keys() if i not in ['ID2', 'mod_income']])
 	print(df_income['mod_income'])
@@ -56,7 +62,6 @@ def edit(dataframe):
 	#get the bird's eye distance to from home to office
 	dataframe['distance_bird'] = np.vectorize(distance)(dataframe['Patient_Latitude'], -1*dataframe['Patient_Longitude'],
 						 				dataframe['Dept_Location_Latitude'], -1*dataframe['Dept_Location_Longitude'] )
-	dataframe['distance_google'].fillna(dataframe['distance_bird'])
 
 	#first let's see how many appointments each person has had up until then and hwo many they miseed
 	dataframe['No_Show']		= (dataframe['Appt_Status_ID']==4).astype(int)
@@ -92,10 +97,9 @@ def edit(dataframe):
 	dataframe['Appt_Time_Min']		= dataframe['Appt_Time'].apply(lambda x: x.minute)
 
 	dataframe = dataframe.drop(['Cancelled','Encounter_ID','Appt_Date','Appt_Time','Appt_Made_Date',
-                  'Appt_Made_Time', 'Dept_Name', 'Dept_Abbr_3', 'Dept_Abbr_4', 'Unnamed: 0'], axis=1)
+                  'Appt_Made_Time', 'Dept_Name', 'Dept_Abbr_3', 'Dept_Abbr_4'], axis=1)
 
 	dataframe['Payor_Type_ID'].fillna(0, inplace = True)
-	dataframe['Duration'].fillna((dataframe['Duration'].mean()), inplace = True)
 	dataframe['distance_google'].fillna((dataframe['distance_google'].mean()), inplace = True)
 	dataframe['distance_bird'].fillna((dataframe['distance_bird'].mean()), inplace = True)
 	dataframe['Patient_Latitude'].fillna((dataframe['Patient_Latitude'].mean()), inplace = True)
@@ -136,7 +140,7 @@ def main(group='all', no_cancel = False, one_hot = False, original = False, gene
 	df = df.merge(df_dept, on = 'Dept_ID') 
 	df = google_distance(df)
 	df = edit(df)
-	df = house_income(df)
+	#df = house_income(df)
 
 
 
@@ -182,7 +186,8 @@ def main(group='all', no_cancel = False, one_hot = False, original = False, gene
                        'Num_Canceled_Encounters_AllTime',
                        'Num_No_Show_Encounters_AllTime',
                        'Appt_Status_ID', 'Patient_Longitude', 'Patient_Latitude',
-                       'Dept_Location_Longitude', 'Dept_Location_Latitude'],
+                       'Dept_Location_Longitude', 'Dept_Location_Latitude'
+                       'Unamed: 0'],
                          axis = 1)
 
 	#runs kmeans if clusters arg > 0
