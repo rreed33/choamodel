@@ -29,8 +29,8 @@ from sklearn.model_selection import StratifiedKFold, cross_validate
 
 
 def record_file(args, df):
-    parameter_names = ['-test_size', '-one_hot', '-group', '-no_cancel', '-sample_type', '-original', '-cv', '-clusters']
-    parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.sample_type, args.original, args.cv, args.clusters]
+    parameter_names = ['-test_size', '-one_hot', '-group', '-no_cancel', '-sample_type', '-original', '-cv']
+    parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.sample_type, args.original, args.cv]
     file_name   = '../choamodel/results/'
     file_ext     = '_'.join([str(i)+'_'+str(j) for i,j in zip(parameter_names, parameters)])
     file_name = file_name + file_ext + '/'
@@ -85,7 +85,7 @@ def write_pred(file_name, model, X_train, y_test, y_pred):
 def main(args):
     #EVERYTHING ABOVE HERE CAN BE IGNORED
     if args.generate_data == 'True':
-        df = dataprocessing.main(args.group, args.no_cancel, args.one_hot, args.original, args.clusters)
+        df = dataprocessing.main(args.group, args.no_cancel, args.one_hot, args.original)
     elif args.generate_data == 'False':
         df = pd.read_csv('../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_intermediate.csv'.format(
 				args.group, args.no_cancel, args.one_hot, args.original))
@@ -308,8 +308,6 @@ if __name__ == '__main__':
     		help = 'Generate data from scratch or read from choa_intermediate.csv')
     parser.add_argument('-cv', type = int, default = 0,
             help = 'Enter an int > 0 to run Stratified k-fold cross validation')
-    parser.add_argument('-clusters', type = int, default = 0,
-            help = 'Enter an int > 0 to run K-means clustering')
     args = parser.parse_args()
     # print(parser)
     main(args)
