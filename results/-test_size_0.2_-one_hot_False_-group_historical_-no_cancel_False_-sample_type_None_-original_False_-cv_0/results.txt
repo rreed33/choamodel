@@ -1,0 +1,12 @@
+---This file was generate as a part of Senior Design by team 14 on 2018-10-22 13:14:54.863899 ---
+
+COMMAND LINE INPUT: 
+python NN_austin.py -test_size: 0.2, -one_hot: False, -group: historical, -no_cancel: False, -sample_type: None, -original: False, -cv: 0
+Training Group:	HISTORICAL
+Number of Encounters: 86984
+Number of Patients: 25089
+Number of Features: 31
+Number of No Shows:	9365
+
+Feature Names:
+Appt_Length, Dept_ID, Provider_ID, Appt_Logistics_Type_ID, Made_Lead_Days_Work, Made_Lead_Days_Calendar, Visit_Type_ID, Sibley_ID, Patient_Age_Bucket_ID, Payor_Type_ID, PopDensity, Duration, Distance, distance, No_Show, count_app, count_miss, count_cancel, diff_pay_count, Appt_Made_Year, Appt_Made_Month, Appt_Made_Day, Appt_Made_Hour, Appt_Made_Min, Appt_Year, Appt_Month, Appt_Day, Appt_Time_Hour, Appt_Time_Min, count, cluster

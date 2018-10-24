@@ -1,0 +1,77 @@
+---This file was generate as a part of Senior Design by team 14 on 2018-10-22 13:41:37.650779 ---
+
+COMMAND LINE INPUT: 
+python NN_austin.py -test_size: 0.2, -one_hot: False, -group: historical, -no_cancel: True, -sample_type: ['overunder'], -original: False, -cv: 0, -clusters: 10
+Training Group:	HISTORICAL
+Number of Encounters: 4035
+Number of Patients: 1836
+Number of Features: 32
+Number of No Shows:	249
+
+Feature Names:
+Unnamed: 0, Appt_Length, Dept_ID, Provider_ID, Appt_Logistics_Type_ID, Made_Lead_Days_Work, Made_Lead_Days_Calendar, Visit_Type_ID, Sibley_ID, Patient_Age_Bucket_ID, Payor_Type_ID, PopDensity, Duration, Distance, distance, No_Show, count_app, count_miss, count_cancel, diff_pay_count, Appt_Made_Year, Appt_Made_Month, Appt_Made_Day, Appt_Made_Hour, Appt_Made_Min, Appt_Year, Appt_Month, Appt_Day, Appt_Time_Hour, Appt_Time_Min, count, cluster
+
+
+----------Writing Results for __log_HISTORICAL__ ----------
+Accuracy Score:	0.9343246592317225
+Confusion Matrix:
+[[754   0]
+ [ 53   0]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.93      1.00      0.97       754
+          1       0.00      0.00      0.00        53
+
+avg / total       0.87      0.93      0.90       807
+
+ROC AUC Score:	0.5
+Coefficients:
+[('Appt_Length', 0.015), ('count_app', -0.01), ('Patient_Age_Bucket_ID', 0.007), ('Appt_Day', -0.007), ('Made_Lead_Days_Calendar', 0.006), ('Visit_Type_ID', 0.006), ('Appt_Time_Min', -0.006), ('Appt_Made_Min', -0.005), ('Appt_Made_Month', 0.004), ('Appt_Made_Day', 0.004), ('Payor_Type_ID', -0.003), ('count_miss', 0.003), ('count_cancel', 0.003), ('Appt_Made_Hour', 0.003), ('Appt_Time_Hour', 0.003), ('Appt_Logistics_Type_ID', -0.002), ('distance', 0.002), ('Provider_ID', 0.001), ('Made_Lead_Days_Work', 0.001), ('diff_pay_count', 0.001), ('Appt_Made_Year', -0.001), ('Appt_Month', -0.001), ('Unnamed: 0', 0.0), ('Dept_ID', -0.0), ('PopDensity', -0.0), ('Duration', -0.0), ('Distance', -0.0), ('Appt_Year', -0.0), ('cluster', -0.0)]
+
+----------Writing Results for __logL1_HISTORICAL__ ----------
+Accuracy Score:	0.9343246592317225
+Confusion Matrix:
+[[754   0]
+ [ 53   0]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.93      1.00      0.97       754
+          1       0.00      0.00      0.00        53
+
+avg / total       0.87      0.93      0.90       807
+
+ROC AUC Score:	0.5
+
+
+----------Writing Results for __dtree_HISTORICAL__ ----------
+Accuracy Score:	0.8835192069392813
+Confusion Matrix:
+[[703  51]
+ [ 43  10]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.94      0.93      0.94       754
+          1       0.16      0.19      0.18        53
+
+avg / total       0.89      0.88      0.89       807
+
+ROC AUC Score:	0.5605199939942945
+
+
+----------Writing Results for __rf_HISTORICAL__ ----------
+Accuracy Score:	0.9343246592317225
+Confusion Matrix:
+[[754   0]
+ [ 53   0]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.93      1.00      0.97       754
+          1       0.00      0.00      0.00        53
+
+avg / total       0.87      0.93      0.90       807
+
+ROC AUC Score:	0.5

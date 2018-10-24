@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 import sklearn.preprocessing
+from sklearn.cluster import KMeans
 
 def distance(lat1, lon1, lat2, lon2):
     radius = 6371 # km
@@ -86,7 +87,7 @@ def edit(dataframe):
 	return dataframe
 
 
-def main(group='all', no_cancel = False, one_hot = False, original = False):
+def main(group='all', no_cancel = False, one_hot = False, original = False, clusters = 0):
 	df = pd.read_csv("../data/ENCOUNTERS_RAW.csv")
 	df_dept = pd.read_csv('../data/DEPT_RAW.csv')
 	df = df.merge(df_dept, on = 'Dept_ID') 
@@ -140,6 +141,14 @@ def main(group='all', no_cancel = False, one_hot = False, original = False):
                        'Appt_Status_ID', 'Patient_Longitude', 'Patient_Latitude',
                        'Dept_Location_Longitude', 'Dept_Location_Latitude'],
                          axis = 1)
+
+	#runs kmeans if clusters arg > 0
+	if clusters > 0:
+		print('='*5 + 'CLUSTERING' + '='*5)
+		X = df.drop(['No_Show','Sibley_ID', 'count','Dept_ID','Sibley_ID'], axis=1)
+		kmeans = KMeans(n_clusters=10, random_state=0).fit(X)
+		df['cluster'] = kmeans.labels_
+		df = df[ df['cluster'] == 2]
 
 	if original == 'True':
 		print('dropped')
