@@ -5,7 +5,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 import sklearn.preprocessing
-from sklearn.cluster import KMeans
 import os
 
 def distance(lat1, lon1, lat2, lon2):
@@ -25,21 +24,30 @@ def google_distance(df):
 	#read in the file with all the distances and times for each encounter and scale 
 	dist_df = pd.read_csv('../data/google_dist.csv')
 	scaler = sklearn.preprocessing.MinMaxScaler()
-	dist_df['distance_google'] = scaler.fit_transform(dist_df['Distance'].values.reshape(-1,1))
-	dist_df['duration_google'] = scaler.fit_transform(dist_df['Duration'].values.reshape(-1,1))
 
 	#join the two dataframes on 'Encounter_ID'
 	df = df.merge(dist_df, how = 'left', on='Encounter_ID')
 
+	df['distance_google']	= df['Distance']
+	df['duration_google']	= df['Duration']
+
+	df['distance_google'].fillna((df['distance_google'].mean()), inplace = True)
+	df['duration_google'].fillna((df['duration_google'].mean()), inplace = True)
+
+	df['distance_google'] = scaler.fit_transform(df['distance_google'].values.reshape(-1,1))
+	df['duration_google'] = scaler.fit_transform(df['duration_google'].values.reshape(-1,1))
+
+	df.drop(['Distance', 'Duration'], axis=1, inplace = True)
 	return df
 
 def house_income(df):
 	#this function joins the choa data, the reverse geocode data and census income data
 	df_zip = 	pd.read_csv("../data/rev_geocode_all.csv")
 	df_income = pd.read_csv("../data/income_by_zip.csv")
+	df_income =	df_income[df_income['Annual payroll ($1,000)'] != 'D']
 
 	df_income['Annual payroll ($1,000)'].astype(float)
-	df_income['Paid employees for pay period including March 12 (number)'].astype(int)
+	df_income['Paid employees for pay period including March 12 (number)'].astype(float)
 	df_income['mod_income'] = 1000 * df_income['Annual payroll ($1,000)']/ df_income['Paid employees for pay period including March 12 (number)']
 	df_income.drop([i for i in df_income.keys() if i not in ['ID2', 'mod_income']])
 	print(df_income['mod_income'])
@@ -56,8 +64,7 @@ def edit(dataframe):
 	#get the bird's eye distance to from home to office
 	dataframe['distance_bird'] = np.vectorize(distance)(dataframe['Patient_Latitude'], -1*dataframe['Patient_Longitude'],
 						 				dataframe['Dept_Location_Latitude'], -1*dataframe['Dept_Location_Longitude'] )
-	dataframe['distance_google'].fillna(dataframe['distance_bird'])
-
+	
 	#first let's see how many appointments each person has had up until then and hwo many they miseed
 	dataframe['No_Show']		= (dataframe['Appt_Status_ID']==4).astype(int)
 	dataframe['Cancelled']		= ((dataframe['Appt_Status_ID']!=4)&(dataframe['Appt_Status_ID']!=2)).astype(int)
@@ -92,10 +99,10 @@ def edit(dataframe):
 	dataframe['Appt_Time_Min']		= dataframe['Appt_Time'].apply(lambda x: x.minute)
 
 	dataframe = dataframe.drop(['Cancelled','Encounter_ID','Appt_Date','Appt_Time','Appt_Made_Date',
-                  'Appt_Made_Time', 'Dept_Name', 'Dept_Abbr_3', 'Dept_Abbr_4', 'Unnamed: 0'], axis=1)
+                  'Appt_Made_Time', 'Dept_Name', 'Dept_Abbr_3', 'Dept_Abbr_4'], axis=1)
 
 	dataframe['Payor_Type_ID'].fillna(0, inplace = True)
-	dataframe['Duration'].fillna((dataframe['Duration'].mean()), inplace = True)
+	dataframe['duration_google'].fillna((dataframe['duration_google'].mean()), inplace = True)
 	dataframe['distance_google'].fillna((dataframe['distance_google'].mean()), inplace = True)
 	dataframe['distance_bird'].fillna((dataframe['distance_bird'].mean()), inplace = True)
 	dataframe['Patient_Latitude'].fillna((dataframe['Patient_Latitude'].mean()), inplace = True)
@@ -117,7 +124,7 @@ def main(group='all', no_cancel = False, one_hot = False, original = False, gene
 	elif generate_data == 'False' and not os.path.exists(intermediate_data_name):
 		print('\nTHIS FORMULATION HAS NOT BEEN RECORDED\nCONTINUING TO GENERATE DATA FROM RAW DATA\n--------------------\n\n')
 	elif generate_data == 'True' and os.path.exists(intermediate_data_name):
-		print('\nTHIS FORMULATION COULD HAVE BEEN DONE FASTER IF YOU HAD SET generate_date TO False\n--------------------\n\n')
+		print('\nTHIS FORMULATION COULD HAVE BEEN DONE FASTER IF YOU HAD SET generate_data TO False\n--------------------\n\n')
 
 	#focus on the chosen location
 	
@@ -136,7 +143,8 @@ def main(group='all', no_cancel = False, one_hot = False, original = False, gene
 	df = df.merge(df_dept, on = 'Dept_ID') 
 	df = google_distance(df)
 	df = edit(df)
-	df = house_income(df)
+
+	# df = house_income(df)
 
 
 
@@ -182,16 +190,9 @@ def main(group='all', no_cancel = False, one_hot = False, original = False, gene
                        'Num_Canceled_Encounters_AllTime',
                        'Num_No_Show_Encounters_AllTime',
                        'Appt_Status_ID', 'Patient_Longitude', 'Patient_Latitude',
-                       'Dept_Location_Longitude', 'Dept_Location_Latitude'],
+                       'Dept_Location_Longitude', 'Dept_Location_Latitude',
+                       'Unnamed: 0'],
                          axis = 1)
-
-	#runs kmeans if clusters arg > 0
-	if clusters > 0:
-		print('='*5 + 'CLUSTERING' + '='*5)
-		X = df.drop(['No_Show','Sibley_ID', 'count','Dept_ID','Sibley_ID'], axis=1)
-		kmeans = KMeans(n_clusters=10, random_state=0).fit(X)
-		df['cluster'] = kmeans.labels_
-		df = df[ df['cluster'] == 2]
 
 	if original == 'True':
 		print('dropped')
@@ -201,8 +202,10 @@ def main(group='all', no_cancel = False, one_hot = False, original = False, gene
 	print('CHECK FEATURES:')
 	print(df.keys())
 	print()
-	df.to_csv('../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_office_{}_cv_{}_clusters_{}_intermediate.csv'.format(
-				group, no_cancel, one_hot, original, office, cv, clusters))
+	df.to_csv('../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_office_{}intermediate.csv'.format(
+				group, no_cancel, one_hot, original, office))
+	print(np.sum(df.isna(),axis=0))
+	print('\n\n')
 	return df
 
 if __name__ == '__main__':
