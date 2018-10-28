@@ -27,7 +27,7 @@ from gen_results import main as make_results
 
 def record_file(args, df):
     parameter_names = ['-test_size', '-one_hot', '-group', '-no_cancel', '-sample_type', '-original', '-office']
-    parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.sample_type, args.original]
+    parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.sample_type, args.original, args.office]
     file_name   = '../choamodel/results/'
     file_ext     = '_'.join([str(i)+'_'+str(j) for i,j in zip(parameter_names, parameters)])
     file_name = file_name + file_ext + '/'
@@ -120,6 +120,7 @@ def main(args):
     # , 'ridge_reg', 'lasso_reg' causes a  problem with binary and continuous target space
     # , 'knn' but id takes so long
     model_types = ['naive', 'log', 'dtree', 'rf', 'logL1', 'anamoly']
+    model_types = ['naive', 'dtree']
     for model in model_types:
         #start a classifier
         if model == 'SVM':
@@ -138,15 +139,11 @@ def main(args):
             classifier.fit(X_train, y_train)
         elif model == 'dtree':
             print('-'*10)
-            print('initializing {} model'.format(model))
-            classifier = DecisionTreeClassifier()
-            print('-'*10)
             print('fitting {} model'.format(model))
-            classifier.fit(X_train, y_train)
-            classifier = DecisionTreeClassifier()  
+            classifier = DecisionTreeClassifier(criterion = 'gini', 
+                        max_depth = 4, min_samples_leaf = 10, min_samples_split = 10)  
             classifier.fit(X_train, y_train) 
-            # tree.export_graphviz(classifier, out_file='tree.dot',
-            #          feature_names = df.columns[:27])
+            tree.export_graphviz(classifier, feature_names = X_train.columns, out_file='{}/tree.dot'.format(file_name))
         elif model == 'rf':
             print('-'*10)
             print('initializing {} model'.format(model))
@@ -218,10 +215,10 @@ def main(args):
             print roc_auc_score(y, pred)
             continue
         elif model == 'naive':
-            from sklearn.naive_bayes import GaussianNB
+            from sklearn.naive_bayes import GaussianNB, BernoulliNB, MultinomialNB
             print('-'*10)
             print('initializing {} model'.format(model))
-            classifier = GaussianNB()
+            classifier = MultinomialNB()
             print('-'*10)
             print('fitting {} model'.format(model))
             classifier.fit(X_train, y_train)
@@ -309,7 +306,7 @@ if __name__ == '__main__':
             help = 'the ratio of test to train in decimal form')
     parser.add_argument('-one_hot', type = str, default = 'True', 
             help = 'specify True to make the categorical variables into one hot vector embeddings')
-    parser.add_argument('-group', default = 'all',
+    parser.add_argument('-group', default = 'historical',
             help = 'pick all, historical, or nonhistorical to filter training data')
     parser.add_argument('-no_cancel', type = str, default = 'True', 
             help = 'Choose True to remove cancelled appointmet from dataset')
@@ -319,7 +316,7 @@ if __name__ == '__main__':
     		help = 'Set this as True to reset features to original values or special to only have engineered features')
     parser.add_argument('-generate_data', default = 'True', 
     		help = 'Generate data from scratch or read from choa_intermediate.csv')
-    parser.add_argument('-office', type = str, default = 'all',
+    parser.add_argument('-office', type = str, default = 'macon',
             help = 'Type in the name of the office as present in the data')
     args = parser.parse_args()
     # print(parser)

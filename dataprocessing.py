@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import math
 import sklearn.preprocessing
 import os
+import datetime as dt
 
 def distance(lat1, lon1, lat2, lon2):
     radius = 6371 # km
@@ -34,14 +35,14 @@ def google_distance(df):
 	df['distance_google'].fillna((df['distance_google'].mean()), inplace = True)
 	df['duration_google'].fillna((df['duration_google'].mean()), inplace = True)
 
-	df['distance_google'] = scaler.fit_transform(df['distance_google'].values.reshape(-1,1))
-	df['duration_google'] = scaler.fit_transform(df['duration_google'].values.reshape(-1,1))
+	# df['distance_google'] = scaler.fit_transform(df['distance_google'].values.reshape(-1,1))
+	# df['duration_google'] = scaler.fit_transform(df['duration_google'].values.reshape(-1,1))
 
 	df.drop(['Distance', 'Duration'], axis=1, inplace = True)
 	return df
 
 def house_income(df):
-	#this function joins the choa data, the reverse geocode data and census income data
+	# this function joins the choa data, the reverse geocode data and census income data
 	df_zip = 	pd.read_csv("../data/rev_geocode_all.csv")
 	df_income = pd.read_csv("../data/income_by_zip.csv")
 	df_income =	df_income[df_income['Annual payroll ($1,000)'] != 'D']
@@ -57,10 +58,47 @@ def house_income(df):
 
 	return df 
 
+def avg_app_len(dataframe):
+	# this function joins the enocunters with the 
+	df_times = pd.read_csv("../data/check.csv")
+
+	df_times['Check_In_Time'] = pd.to_datetime(df_times['Check_In_Time'])
+	# df_times['Check_In_Time'] = df_times['Check_In_Time'].apply(lambda x: x.time())
+
+	df_times['Check_Out_Time'] = pd.to_datetime(df_times['Check_Out_Time'])
+	# df_times['Check_Out_Time'] = df_times['Check_Out_Time'].apply(lambda x: x.time())
+
+	dataframe = dataframe.merge(df_times, how = 'left')
+	dataframe['Appt_Time'] = pd.to_datetime(dataframe['Appt_Time'])
+	print dataframe.columns
+
+	#new days have a higher value than older days
+	# read: new - old > 0 
+	# the below lines gather an individuals app length and the late arrival
+	dataframe['app_len'] = (dataframe['Check_Out_Time'] - dataframe['Check_In_Time']).apply(lambda x: divmod(x.days*60*60*24 + x.seconds,60)[0])
+	dataframe['arr_diff'] = (dataframe['Check_In_Time'] - dataframe['Appt_Time']).apply(lambda x: divmod(x.days*60*60*24 + x.seconds, 60)[0])	#negative means they arrived early
+
+	dataframe['avg_app_len'] = dataframe.groupby('Sibley_ID')['app_len'].apply(lambda x: x.shift(1).expanding().mean())
+	dataframe['avg_arr_diff'] = dataframe.groupby('Sibley_ID')['arr_diff'].apply(lambda x: x.shift(1).expanding().mean())
+	# dataframe.sort_values(['Appt_Date','Provider_ID', 'Appt_Time'], ascending = True, inplace = True)
+
+	#the below line gather the difference between consecutive app. the later app's arr - earlier app's dep
+	dataframe['prev_check_out'] = dataframe.groupby(['Appt_Date','Provider_ID'])['Check_Out_Time'].shift(1)
+
+	dataframe['wait_time'] = (dataframe['prev_check_out'] - dataframe['Check_In_Time']).apply(lambda x: divmod(x.days*60*60*24 + x.seconds,60)[0])
+	dataframe['wait_time'] = np.where(((dataframe['Appt_Status_ID'] == 2) & (dataframe['wait_time'] <=0)), 0, dataframe['wait_time'])
+	# dataframe[(dataframe['Appt_Status_ID'] == 2) | (dataframe['wait_time'] <=0)]['wait_time'] = 0 #fillna(0, inplace = True)
+	dataframe['service_time'] = dataframe['app_len']-dataframe['wait_time']
+
+	dataframe['inter_time'] = dataframe.groupby(['Appt_Date','Provider_ID'], as_index = False)['Check_In_Time'].apply(lambda x: x.sort_values().diff()).reset_index(level=0, drop=True).apply(lambda x: x.seconds/60)
+	
+	temp = dataframe[['Encounter_ID','Sibley_ID', 'Dept_ID','Appt_Date','Provider_ID','Appt_Time','Appt_Status_ID','arr_diff','avg_app_len','Check_In_Time','Check_Out_Time','app_len','avg_arr_diff','prev_check_out','wait_time','service_time']]
+	print temp
+	temp.to_csv('quick_check.csv')
+	return dataframe
+
 def edit(dataframe):
 	#use this function to organize all the edits to the raw data before processing
-
-
 	#get the bird's eye distance to from home to office
 	dataframe['distance_bird'] = np.vectorize(distance)(dataframe['Patient_Latitude'], -1*dataframe['Patient_Longitude'],
 						 				dataframe['Dept_Location_Latitude'], -1*dataframe['Dept_Location_Longitude'] )
@@ -98,7 +136,7 @@ def edit(dataframe):
 	dataframe['Appt_Time_Hour']		= dataframe['Appt_Time'].apply(lambda x: x.hour)
 	dataframe['Appt_Time_Min']		= dataframe['Appt_Time'].apply(lambda x: x.minute)
 
-	dataframe = dataframe.drop(['Cancelled','Encounter_ID','Appt_Date','Appt_Time','Appt_Made_Date',
+	dataframe = dataframe.drop(['Cancelled','Appt_Date','Appt_Time','Appt_Made_Date', 'Encounter_ID',
                   'Appt_Made_Time', 'Dept_Name', 'Dept_Abbr_3', 'Dept_Abbr_4'], axis=1)
 
 	dataframe['Payor_Type_ID'].fillna(0, inplace = True)
@@ -112,19 +150,19 @@ def edit(dataframe):
 	return dataframe
 
 
-def main(group='all', no_cancel = False, one_hot = False, original = False, generate_data = 'False', office = 'all'):
+def main(group='all', no_cancel = False, one_hot = False, original = False, generate_data = 'False', office = 'macon'):
 	# READ FROM INTERMEDIATE FILES OF SIMILAR DATA FORMULATIONS
 	intermediate_data_name = '../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_office_{}intermediate.csv'.format(
 				group, no_cancel, one_hot, original, office)
 
 	if generate_data == 'False' and os.path.exists(intermediate_data_name):
-		print('\nREADING FROM FILE ', intermediate_data_name, '\n--------------------\n\n')
+		print '\nREADING FROM FILE ', intermediate_data_name, '\n--------------------\n\n'
 		df = pd.read_csv(intermediate_data_name)
 		return df
 	elif generate_data == 'False' and not os.path.exists(intermediate_data_name):
-		print('\nTHIS FORMULATION HAS NOT BEEN RECORDED\nCONTINUING TO GENERATE DATA FROM RAW DATA\n--------------------\n\n')
+		print '\nTHIS FORMULATION HAS NOT BEEN RECORDED\nCONTINUING TO GENERATE DATA FROM RAW DATA\n--------------------\n\n'
 	elif generate_data == 'True' and os.path.exists(intermediate_data_name):
-		print('\nTHIS FORMULATION COULD HAVE BEEN DONE FASTER IF YOU HAD SET generate_data TO False\n--------------------\n\n')
+		print '\nTHIS FORMULATION COULD HAVE BEEN DONE FASTER IF YOU HAD SET generate_data TO False\n--------------------\n\n'
 
 	#focus on the chosen location
 	
@@ -139,8 +177,10 @@ def main(group='all', no_cancel = False, one_hot = False, original = False, gene
 		df = df[df['Dept_ID']==office_code[office]]
 	elif office not in office_code.keys() and office != 'all':
 		print('ERROR: a specific office was not identified. will continue model with full data set')
-		
+	
+	# df = df.iloc[:10000]
 	df = df.merge(df_dept, on = 'Dept_ID') 
+	df = avg_app_len(df)
 	df = google_distance(df)
 	df = edit(df)
 
@@ -201,8 +241,9 @@ def main(group='all', no_cancel = False, one_hot = False, original = False, gene
 
 	print('CHECK FEATURES:')
 	print(df.keys())
-	print()
-	df.to_csv('../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_office_{}intermediate.csv'.format(
+	print('written to file:\n\t'+'../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_office_{}_intermediate.csv'.format(
+				group, no_cancel, one_hot, original, office))
+	df.to_csv('../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_office_{}_intermediate.csv'.format(
 				group, no_cancel, one_hot, original, office))
 	print(np.sum(df.isna(),axis=0))
 	print('\n\n')
@@ -210,12 +251,14 @@ def main(group='all', no_cancel = False, one_hot = False, original = False, gene
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
+	parser.add_argument('-group', type = str, default = 'all')
 	parser.add_argument('-original', type =str, default = 'False',
 			help = 'set equal to True to reduce data to original form')
 	parser.add_argument('-office', type = str, default = 'macon')
+	parser.add_argument('-generate_data', type = str, default = 'True')
 	args = parser.parse_args()
 
-	main(args.original, args.office)
+	main(group = args.group, original = args.original, office = args.office, generate_data = args.generate_data)
 
 
 #TO DO:

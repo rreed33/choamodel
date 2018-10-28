@@ -30,7 +30,7 @@ from sklearn.cross_validation import cross_val_predict
 # blah = gen_results(model, x, y)
 # print(blah["AUC"]) -> returns auc_object
 
-def main(model, X_test, y_test, model_name, file_name, group, cv):
+def main(model, X_test, y_test, model_name, file_name, group, cv = 0):
     y_pred = model.predict(X_test)
     # print(y_pred)
     modelMetrics =	{}
