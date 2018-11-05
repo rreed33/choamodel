@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 import sklearn.preprocessing
+from sklearn.cluster import KMeans
 import os
 import datetime as dt
 
@@ -68,7 +69,7 @@ def avg_app_len(dataframe):
 
 	dataframe = dataframe.merge(df_times, how = 'left')
 	dataframe['Appt_Time'] = pd.to_datetime(dataframe['Appt_Time'])
-	print dataframe.columns
+	print(dataframe.columns)
 
 	#new days have a higher value than older days
 	# read: new - old > 0 
@@ -91,7 +92,7 @@ def avg_app_len(dataframe):
 	dataframe['inter_time'] = dataframe.groupby(['Appt_Date','Provider_ID'], as_index = False)['Check_In_Time'].apply(lambda x: x.sort_values().diff()).reset_index(level=0, drop=True).apply(lambda x: x.seconds/60)
 	
 	temp = dataframe[['Encounter_ID','Sibley_ID', 'Dept_ID','Appt_Date','Provider_ID','Appt_Time','Appt_Status_ID','arr_diff','avg_app_len','Check_In_Time','Check_Out_Time','app_len','avg_arr_diff','prev_check_out','wait_time','service_time']]
-	print temp
+	print(temp)
 	temp.to_csv('quick_check.csv')
 	return dataframe
 
@@ -156,13 +157,13 @@ def main(group, no_cancel, one_hot, original, generate_data, office, cv, cluster
 				group, no_cancel, one_hot, original, office, cv, clusters)
 
 	if generate_data == 'False' and os.path.exists(intermediate_data_name):
-		print '\nREADING FROM FILE ', intermediate_data_name, '\n--------------------\n\n'
+		print('\nREADING FROM FILE ', intermediate_data_name, '\n--------------------\n\n')
 		df = pd.read_csv(intermediate_data_name)
 		return df
 	elif generate_data == 'False' and not os.path.exists(intermediate_data_name):
-		print '\nTHIS FORMULATION HAS NOT BEEN RECORDED\nCONTINUING TO GENERATE DATA FROM RAW DATA\n--------------------\n\n'
+		print('\nTHIS FORMULATION HAS NOT BEEN RECORDED\nCONTINUING TO GENERATE DATA FROM RAW DATA\n--------------------\n\n')
 	elif generate_data == 'True' and os.path.exists(intermediate_data_name):
-		print '\nTHIS FORMULATION COULD HAVE BEEN DONE FASTER IF YOU HAD SET generate_data TO False\n--------------------\n\n'
+		print('\nTHIS FORMULATION COULD HAVE BEEN DONE FASTER IF YOU HAD SET generate_data TO False\n--------------------\n\n')
 
 	#focus on the chosen location
 	
@@ -180,7 +181,7 @@ def main(group, no_cancel, one_hot, original, generate_data, office, cv, cluster
 	
 	# df = df.iloc[:10000]
 	df = df.merge(df_dept, on = 'Dept_ID') 
-	df = avg_app_len(df)
+	#df = avg_app_len(df)
 	df = google_distance(df)
 	df = edit(df)
 
@@ -251,8 +252,7 @@ def main(group, no_cancel, one_hot, original, generate_data, office, cv, cluster
 	print(df.keys())
 	print('written to file:\n\t'+'../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_office_{}_intermediate.csv'.format(
 				group, no_cancel, one_hot, original, office))
-	df.to_csv('../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_office_{}_intermediate.csv'.format(
-				group, no_cancel, one_hot, original, office))
+	df.to_csv(intermediate_data_name)
 	print(np.sum(df.isna(),axis=0))
 	print('\n\n')
 	return df

@@ -22,6 +22,9 @@ from sklearn import tree
 import dataprocessing
 from gen_results import main as make_results
 
+from sklearn.model_selection import StratifiedKFold, cross_validate
+##K-folds with equal class distribtions
+
 # def strBool(string):
 
 
@@ -46,7 +49,7 @@ def record_file(args, df):
     return file_name
 
 
-def record_results(model, results, file_name, group):
+def record_results(model, results, file_name, group, cv):
 
     with open(file_name+'results.txt', 'a') as f:
         f.write('\n\n----------Writing Results for __{}_{}__ ----------\n'.format(model, group))
@@ -214,10 +217,10 @@ def main(args):
             print('fitting {} model'.format(model))
             pred = classifier.fit_predict(X)
             pred = [1 if i == -1 else 0 for i in pred]
-            print accuracy_score(y, pred)
-            print confusion_matrix(y, pred)  
-            print classification_report(y, pred)
-            print roc_auc_score(y, pred)
+            print(accuracy_score(y, pred))
+            print(confusion_matrix(y, pred))  
+            print(classification_report(y, pred))
+            print(roc_auc_score(y, pred))
             continue
         elif model == 'naive':
             from sklearn.naive_bayes import GaussianNB, BernoulliNB, MultinomialNB
@@ -331,6 +334,10 @@ if __name__ == '__main__':
     		help = 'Generate data from scratch or read from choa_intermediate.csv')
     parser.add_argument('-office', type = str, default = 'macon',
             help = 'Type in the name of the office as present in the data')
+    parser.add_argument('-cv', type = int, default = 0,
+            help = 'Enter an int > 0 to run Stratified k-fold cross validation')
+    parser.add_argument('-clusters', type = int, default = 0,
+            help = 'Enter an int > 0 to run K-means clustering')
     args = parser.parse_args()
     # print(parser)
     main(args)
