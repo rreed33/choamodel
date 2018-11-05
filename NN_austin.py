@@ -26,8 +26,8 @@ from gen_results import main as make_results
 
 
 def record_file(args, df):
-    parameter_names = ['-test_size', '-one_hot', '-group', '-no_cancel', '-sample_type', '-original', '-office']
-    parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.sample_type, args.original, args.office]
+    parameter_names = ['-test_size', '-one_hot', '-group', '-no_cancel', '-sample_type', '-original', '-office', '-cv', '-clusters']
+    parameters      = [args.test_size, args.one_hot, args.group, args.no_cancel, args.sample_type, args.original, args.office, args.cv, args.clusters]
     file_name   = '../choamodel/results/'
     file_ext     = '_'.join([str(i)+'_'+str(j) for i,j in zip(parameter_names, parameters)])
     file_name = file_name + file_ext + '/'
@@ -74,7 +74,13 @@ def write_pred(file_name, model, X_train, y_test, y_pred):
 
 def main(args):
     #EVERYTHING ABOVE HERE CAN BE IGNORED
-    df = dataprocessing.main(args.group, args.no_cancel, args.one_hot, args.original, args.generate_data, args.office)
+    if args.generate_data == 'True':
+        df = dataprocessing.main(args.group, args.no_cancel, args.one_hot, args.original, args.generate_data, args.office, args.cv, args.clusters)
+    elif args.generate_data == 'False':
+        df = pd.read_csv('../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_office_{}_cv_{}_clusters_{}_intermediate.csv'.format(
+				args.group, args.no_cancel, args.one_hot, args.original, args.office, args.cv, args.clusters))
+    else:
+        print("ERROR: CORRECT 'generate_data' ARGUMENT TO 'True' or 'False'" )
 
     #split the data into dependent and predictor
     X = df.drop(['No_Show','Sibley_ID', 'count'], axis=1)  
@@ -120,7 +126,6 @@ def main(args):
     # , 'ridge_reg', 'lasso_reg' causes a  problem with binary and continuous target space
     # , 'knn' but id takes so long
     model_types = ['naive', 'log', 'dtree', 'rf', 'logL1', 'anamoly']
-    model_types = ['naive', 'dtree']
     for model in model_types:
         #start a classifier
         if model == 'SVM':
@@ -225,8 +230,16 @@ def main(args):
 
 
         print('GENERAL')
-        results = make_results(classifier, X_test, y_test, model, file_name, args.group.upper())
-        record_results(model, results, file_name, args.group.upper())
+        results = make_results(classifier, X_test, y_test, model, file_name, args.group.upper(), args.cv)
+        scoring = ['accuracy', 'precision', 'recall', 'f1']
+        kfold = StratifiedKFold(n_splits=10, random_state=42)
+        scores = cross_validate(estimator=classifier,
+                                          X=X,
+                                          y=y,
+                                          cv=kfold,
+                                          scoring=scoring)
+        print("Scores ", scores)
+        record_results(model, results, file_name, args.group.upper(), args.cv)
         write_pred(file_name.split('/')[-2], model, X_test, y_test, results['Predictions'])
 
 
@@ -237,13 +250,13 @@ def main(args):
 
             #write resutls for HISTORICAL SEGMENT
             print('HISTORICAL')
-            results_hist = make_results(classifier, X_test[hist_mask], y_test[hist_mask], model, file_name, args.group)
-            record_results(model, results_hist, file_name, 'HISTORICAL')
+            results_hist = make_results(classifier, X_test[hist_mask], y_test[hist_mask], model, file_name, args.group, args.cv)
+            record_results(model, results_hist, file_name, 'HISTORICAL', args.cv)
 
             #write results for NONHISTORICAL SEGMENT
             print('NONHISTORICAL')
-            results_nonhist = make_results(classifier, X_test[nonhist_mask], y_test[nonhist_mask], model, file_name, args.group)
-            record_results(model, results_nonhist, file_name, 'NONHISTORICAL')
+            results_nonhist = make_results(classifier, X_test[nonhist_mask], y_test[nonhist_mask], model, file_name, args.group, args.cv)
+            record_results(model, results_nonhist, file_name, 'NONHISTORICAL', args.cv)
     
     #fit the model
     # print('='*20)

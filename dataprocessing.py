@@ -31,14 +31,12 @@ def google_distance(df):
 
 	df['distance_google']	= df['Distance']
 	df['duration_google']	= df['Duration']
-
 	df['distance_google'].fillna((df['distance_google'].mean()), inplace = True)
 	df['duration_google'].fillna((df['duration_google'].mean()), inplace = True)
-
-	# df['distance_google'] = scaler.fit_transform(df['distance_google'].values.reshape(-1,1))
-	# df['duration_google'] = scaler.fit_transform(df['duration_google'].values.reshape(-1,1))
-
+	df['distance_google'] = scaler.fit_transform(df['distance_google'].values.reshape(-1,1))
+	df['duration_google'] = scaler.fit_transform(df['duration_google'].values.reshape(-1,1))
 	df.drop(['Distance', 'Duration'], axis=1, inplace = True)
+
 	return df
 
 def house_income(df):
@@ -102,7 +100,7 @@ def edit(dataframe):
 	#get the bird's eye distance to from home to office
 	dataframe['distance_bird'] = np.vectorize(distance)(dataframe['Patient_Latitude'], -1*dataframe['Patient_Longitude'],
 						 				dataframe['Dept_Location_Latitude'], -1*dataframe['Dept_Location_Longitude'] )
-	
+
 	#first let's see how many appointments each person has had up until then and hwo many they miseed
 	dataframe['No_Show']		= (dataframe['Appt_Status_ID']==4).astype(int)
 	dataframe['Cancelled']		= ((dataframe['Appt_Status_ID']!=4)&(dataframe['Appt_Status_ID']!=2)).astype(int)
@@ -150,10 +148,12 @@ def edit(dataframe):
 	return dataframe
 
 
-def main(group='all', no_cancel = False, one_hot = False, original = False, generate_data = 'False', office = 'macon'):
+
+# def main(group='all', no_cancel = False, one_hot = False, original = False, generate_data = 'False', office = 'all', cv = 0, clusters = 0):
+def main(group, no_cancel, one_hot, original, generate_data, office, cv, clusters):
 	# READ FROM INTERMEDIATE FILES OF SIMILAR DATA FORMULATIONS
-	intermediate_data_name = '../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_office_{}intermediate.csv'.format(
-				group, no_cancel, one_hot, original, office)
+	intermediate_data_name = '../data/choa_group_{}_no_cancel_{}_one_hot_{}_original_{}_office_{}_cv_{}_clusters_{}_intermediate.csv'.format(
+				group, no_cancel, one_hot, original, office, cv, clusters)
 
 	if generate_data == 'False' and os.path.exists(intermediate_data_name):
 		print '\nREADING FROM FILE ', intermediate_data_name, '\n--------------------\n\n'
@@ -233,6 +233,14 @@ def main(group='all', no_cancel = False, one_hot = False, original = False, gene
                        'Dept_Location_Longitude', 'Dept_Location_Latitude',
                        'Unnamed: 0'],
                          axis = 1)
+
+	#runs kmeans if clusters arg > 0
+	if clusters > 0:
+		print('='*5 + 'CLUSTERING' + '='*5)
+		X = df.drop(['No_Show','Sibley_ID', 'count','Dept_ID','Sibley_ID'], axis=1)
+		kmeans = KMeans(n_clusters=clusters, random_state=0).fit(X)
+		df['cluster'] = kmeans.labels_
+		# df = df[ df['cluster'] == 2]
 
 	if original == 'True':
 		print('dropped')
