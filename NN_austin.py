@@ -12,7 +12,7 @@ from sklearn.kernel_ridge import KernelRidge
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score, roc_curve, make_scorer, accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score, roc_auc_score, roc_curve
 import math
 import imblearn
 import os
@@ -21,9 +21,6 @@ from sklearn import tree
 
 import dataprocessing
 from gen_results import main as make_results
-
-from sklearn.model_selection import StratifiedKFold, cross_validate
-##K-folds with equal class distribtions
 
 # def strBool(string):
 
@@ -49,7 +46,7 @@ def record_file(args, df):
     return file_name
 
 
-def record_results(model, results, file_name, group, cv):
+def record_results(model, results, file_name, group):
 
     with open(file_name+'results.txt', 'a') as f:
         f.write('\n\n----------Writing Results for __{}_{}__ ----------\n'.format(model, group))
@@ -59,14 +56,7 @@ def record_results(model, results, file_name, group, cv):
         f.write('ROC AUC Score:\t{}\n'.format(results['ROC AUC']))
         if model =='log':
         	f.write('Coefficients:\n{}'.format(results['coef']))
-        if cv > 0:
-            metrics = ['train_Show_Precision', 'test_Show_Precision', 'train_NoShow_Precision', 'test_NoShow_Precision',
-                    'train_Show_Recall', 'test_Show_Recall', 'train_NoShow_Recall', 'test_NoShow_Recall',
-                    'train_Show_F1', 'test_Show_F1', 'train_NoShow_F1', 'test_NoShow_F1']
-            f.write('CV metrics - array, avg, std\n')
-            for i in metrics:
-                arr = results['CV Scores'][i]
-                f.write('{}\nArray: {}\nAverage: {}\nStd: {}\n\n'.format(i, arr, np.mean(arr), np.std(arr)))
+
 
 def write_pred(file_name, model, X_train, y_test, y_pred):
 	#this function writes the prediciton with the whole predictors as well
@@ -135,7 +125,6 @@ def main(args):
     # , 'kernel_ridge' causes a problem with memory for rn
     # , 'ridge_reg', 'lasso_reg' causes a  problem with binary and continuous target space
     # , 'knn' but id takes so long
-
     model_types = ['naive', 'log', 'dtree', 'rf', 'logL1', 'anamoly']
     for model in model_types:
         #start a classifier
@@ -153,25 +142,13 @@ def main(args):
             print('-'*10)
             print('fitting {} model'.format(model))
             classifier.fit(X_train, y_train)
-        elif model == 'logL1':
-            print('-'*10)
-            print('initializing {} model'.format(model))
-            classifier = LogisticRegression(penalty='l1')
-            print('-'*10)
-            print('fitting {} model'.format(model))
-            classifier.fit(X_train, y_train)
         elif model == 'dtree':
             print('-'*10)
-            print('initializing {} model'.format(model))
-            classifier = DecisionTreeClassifier()
-            print('-'*10)
             print('fitting {} model'.format(model))
-            classifier.fit(X_train, y_train)
-            classifier = DecisionTreeClassifier()  
+            classifier = DecisionTreeClassifier(criterion = 'gini', 
+                        max_depth = 4, min_samples_leaf = 10, min_samples_split = 10)  
             classifier.fit(X_train, y_train) 
-            tree.export_graphviz(classifier, out_file='tree.dot',
-                     feature_names = X.columns)
-
+            tree.export_graphviz(classifier, feature_names = X_train.columns, out_file='{}/tree.dot'.format(file_name))
         elif model == 'rf':
             print('-'*10)
             print('initializing {} model'.format(model))
@@ -237,16 +214,16 @@ def main(args):
             print('fitting {} model'.format(model))
             pred = classifier.fit_predict(X)
             pred = [1 if i == -1 else 0 for i in pred]
-            # print accuracy_score(y, pred)
-            # print confusion_matrix(y, pred)  
-            # print classification_report(y, pred)
-            # print roc_auc_score(y, pred)
+            print accuracy_score(y, pred)
+            print confusion_matrix(y, pred)  
+            print classification_report(y, pred)
+            print roc_auc_score(y, pred)
             continue
         elif model == 'naive':
-            from sklearn.naive_bayes import GaussianNB
+            from sklearn.naive_bayes import GaussianNB, BernoulliNB, MultinomialNB
             print('-'*10)
             print('initializing {} model'.format(model))
-            classifier = GaussianNB()
+            classifier = MultinomialNB()
             print('-'*10)
             print('fitting {} model'.format(model))
             classifier.fit(X_train, y_train)
@@ -340,11 +317,11 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-test_size', type = float, default = .2,
             help = 'the ratio of test to train in decimal form')
-    parser.add_argument('-one_hot', type = str, default = 'False', 
+    parser.add_argument('-one_hot', type = str, default = 'True', 
             help = 'specify True to make the categorical variables into one hot vector embeddings')
-    parser.add_argument('-group', default = 'all',
+    parser.add_argument('-group', default = 'historical',
             help = 'pick all, historical, or nonhistorical to filter training data')
-    parser.add_argument('-no_cancel', type = str, default = 'False', 
+    parser.add_argument('-no_cancel', type = str, default = 'True', 
             help = 'Choose True to remove cancelled appointmet from dataset')
     parser.add_argument('-sample_type', nargs = '*', default = None, 
             help = 'Fill with the oversampling method and then values to plug into method after word, seperate by spaces')
@@ -352,12 +329,8 @@ if __name__ == '__main__':
     		help = 'Set this as True to reset features to original values or special to only have engineered features')
     parser.add_argument('-generate_data', default = 'True', 
     		help = 'Generate data from scratch or read from choa_intermediate.csv')
-    parser.add_argument('-office', type = str, default = 'all',
+    parser.add_argument('-office', type = str, default = 'macon',
             help = 'Type in the name of the office as present in the data')
-    parser.add_argument('-cv', type = int, default = 0,
-            help = 'Enter an int > 0 to run Stratified k-fold cross validation')
-    parser.add_argument('-clusters', type = int, default = 0,
-            help = 'Enter an int > 0 to run K-means clustering')
     args = parser.parse_args()
     # print(parser)
     main(args)
