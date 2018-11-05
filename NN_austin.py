@@ -241,7 +241,7 @@ def main(args):
                                           y=y,
                                           cv=kfold,
                                           scoring=scoring)
-        print("Scores ", scores)
+        #print("Scores ", scores)
         record_results(model, results, file_name, args.group.upper(), args.cv)
         write_pred(file_name.split('/')[-2], model, X_test, y_test, results['Predictions'])
 

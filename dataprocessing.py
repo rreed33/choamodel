@@ -238,7 +238,8 @@ def main(group, no_cancel, one_hot, original, generate_data, office, cv, cluster
 	#runs kmeans if clusters arg > 0
 	if clusters > 0:
 		print('='*5 + 'CLUSTERING' + '='*5)
-		X = df.drop(['No_Show','Sibley_ID', 'count','Dept_ID','Sibley_ID'], axis=1)
+		# X = df.drop(['No_Show','Sibley_ID', 'count','Dept_ID','Sibley_ID'], axis=1)
+		X = df.drop(['No_Show','Sibley_ID', 'Sibley_ID'], axis=1)
 		kmeans = KMeans(n_clusters=clusters, random_state=0).fit(X)
 		df['cluster'] = kmeans.labels_
 		# df = df[ df['cluster'] == 2]
