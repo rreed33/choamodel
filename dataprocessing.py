@@ -91,8 +91,11 @@ def avg_app_len(dataframe):
 
 	dataframe['inter_time'] = dataframe.groupby(['Appt_Date','Provider_ID'], as_index = False)['Check_In_Time'].apply(lambda x: x.sort_values().diff()).reset_index(level=0, drop=True).apply(lambda x: x.seconds/60)
 	
+	dataframe = dataframe.drop(['Check_In_Time', 'Check_Out_Time', 'Appt_Time'], axis = 1, inplace = True)
+
 	temp = dataframe[['Encounter_ID','Sibley_ID', 'Dept_ID','Appt_Date','Provider_ID','Appt_Time','Appt_Status_ID','arr_diff','avg_app_len','Check_In_Time','Check_Out_Time','app_len','avg_arr_diff','prev_check_out','wait_time','service_time']]
 	print(temp)
+	#print(temp.dtypes)
 	temp.to_csv('quick_check.csv')
 	return dataframe
 
@@ -185,7 +188,7 @@ def main(group, no_cancel, one_hot, original, generate_data, office, cv, cluster
 	df = google_distance(df)
 	df = edit(df)
 
-	# df = house_income(df)
+	#df = house_income(df)
 
 
 
@@ -239,7 +242,7 @@ def main(group, no_cancel, one_hot, original, generate_data, office, cv, cluster
 	if clusters > 0:
 		print('='*5 + 'CLUSTERING' + '='*5)
 		# X = df.drop(['No_Show','Sibley_ID', 'count','Dept_ID','Sibley_ID'], axis=1)
-		X = df.drop(['No_Show','Sibley_ID', 'Sibley_ID'], axis=1)
+		X = df.drop(['Sibley_ID'], axis=1)
 		kmeans = KMeans(n_clusters=clusters, random_state=0).fit(X)
 		df['cluster'] = kmeans.labels_
 		# df = df[ df['cluster'] == 2]
