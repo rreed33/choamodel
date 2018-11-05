@@ -141,7 +141,7 @@ def main(group, no_cancel, one_hot, original, generate_data, office, cv, cluster
 	df = df.merge(df_dept, on = 'Dept_ID') 
 	df = google_distance(df)
 	df = edit(df)
-	#df = house_income(df)
+	df = house_income(df)
 
 
 
