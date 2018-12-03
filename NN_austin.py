@@ -129,6 +129,7 @@ def main(args):
     # , 'ridge_reg', 'lasso_reg' causes a  problem with binary and continuous target space
     # , 'knn' but id takes so long
     model_types = ['naive', 'log', 'dtree', 'rf', 'logL1', 'anamoly']
+    # model_types = ['dtree']
     for model in model_types:
         #start a classifier
         if model == 'SVM':
@@ -148,8 +149,8 @@ def main(args):
         elif model == 'dtree':
             print('-'*10)
             print('fitting {} model'.format(model))
-            classifier = DecisionTreeClassifier(criterion = 'gini', 
-                        max_depth = 4, min_samples_leaf = 10, min_samples_split = 10)  
+            classifier = DecisionTreeClassifier(criterion = 'entropy', 
+                        max_depth = 10, min_samples_leaf = 10, min_samples_split = 10)  
             classifier.fit(X_train, y_train) 
             tree.export_graphviz(classifier, feature_names = X_train.columns, out_file='{}/tree.dot'.format(file_name))
         elif model == 'rf':

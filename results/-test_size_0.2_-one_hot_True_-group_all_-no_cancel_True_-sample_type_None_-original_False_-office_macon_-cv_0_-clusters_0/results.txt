@@ -1,0 +1,255 @@
+---This file was generate as a part of Senior Design by team 14 on 2018-11-23 20:20:02.330962 ---
+
+COMMAND LINE INPUT: 
+python NN_austin.py -test_size: 0.2, -one_hot: True, -group: all, -no_cancel: True, -sample_type: None, -original: False, -office: macon, -cv: 0, -clusters: 0
+Training Group:	ALL
+Number of Encounters: 10654
+Number of Patients: 5640
+Number of Features: 62
+Number of No Shows:	1665
+
+Feature Names:
+Appt_Length, Made_Lead_Days_Work, Made_Lead_Days_Calendar, Sibley_ID, PopDensity, distance_google, duration_google, distance_bird, No_Show, count_app, count_miss, count_cancel, diff_pay_count, Appt_Made_Year, Appt_Made_Month, Appt_Made_Day, Appt_Made_Hour, Appt_Made_Min, Appt_Year, Appt_Month, Appt_Day, Appt_Time_Hour, Appt_Time_Min, dept_14, provider_7, provider_12, provider_28, provider_73, appt_log_type_0, appt_log_type_1, appt_log_type_2, appt_log_type_3, appt_log_type_4, visit_type_7, visit_type_9, visit_type_11, visit_type_12, visit_type_14, visit_type_15, visit_type_16, visit_type_17, visit_type_19, visit_type_23, visit_type_24, visit_type_27, visit_type_28, visit_type_29, visit_type_30, visit_type_31, visit_type_38, visit_type_42, age_bucket_0, age_bucket_1, age_bucket_2, age_bucket_3, age_bucket_4, payor_type_0.0, payor_type_1.0, payor_type_2.0, payor_type_3.0, payor_type_4.0, count
+
+
+----------Writing Results for __naive_ALL__ ----------
+Accuracy Score:	0.7616142656030033
+Confusion Matrix:
+[[1536  234]
+ [ 274   87]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.85      0.87      0.86      1770
+          1       0.27      0.24      0.26       361
+
+avg / total       0.75      0.76      0.76      2131
+
+ROC AUC Score:	0.5543969200431945
+
+
+----------Writing Results for __naive_HISTORICAL__ ----------
+Accuracy Score:	0.7172701949860725
+Confusion Matrix:
+[[951 201]
+ [205  79]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.82      0.83      0.82      1152
+          1       0.28      0.28      0.28       284
+
+avg / total       0.72      0.72      0.72      1436
+
+ROC AUC Score:	0.5518449237089201
+
+
+----------Writing Results for __naive_NONHISTORICAL__ ----------
+Accuracy Score:	0.8532374100719424
+Confusion Matrix:
+[[585  33]
+ [ 69   8]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.89      0.95      0.92       618
+          1       0.20      0.10      0.14        77
+
+avg / total       0.82      0.85      0.83       695
+
+ROC AUC Score:	0.5252490228218384
+
+
+----------Writing Results for __log_ALL__ ----------
+Accuracy Score:	0.8371656499296105
+Confusion Matrix:
+[[1753   17]
+ [ 330   31]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.84      0.99      0.91      1770
+          1       0.65      0.09      0.15       361
+
+avg / total       0.81      0.84      0.78      2131
+
+ROC AUC Score:	0.538134028201637
+Coefficients:
+[('payor_type_0.0', 1.744), ('payor_type_1.0', -0.763), ('count_miss', 0.68), ('payor_type_4.0', -0.606), ('payor_type_2.0', -0.463), ('age_bucket_1', -0.289), ('age_bucket_0', 0.285), ('count_cancel', 0.284), ('visit_type_11', 0.229), ('age_bucket_4', 0.185), ('age_bucket_3', -0.183), ('appt_log_type_4', -0.163), ('visit_type_28', -0.16), ('diff_pay_count', -0.135), ('Made_Lead_Days_Work', -0.127), ('count_app', -0.126), ('visit_type_23', -0.1), ('Made_Lead_Days_Calendar', 0.093), ('appt_log_type_0', 0.089), ('payor_type_3.0', 0.088), ('PopDensity', -0.083), ('visit_type_12', 0.08), ('provider_73', -0.07), ('appt_log_type_1', 0.068), ('appt_log_type_2', 0.056), ('appt_log_type_3', -0.049), ('visit_type_16', 0.048), ('Appt_Month', 0.045), ('Appt_Made_Year', 0.04), ('visit_type_30', -0.04), ('provider_28', 0.032), ('Appt_Year', 0.031), ('provider_12', 0.027), ('Appt_Made_Month', -0.026), ('visit_type_9', -0.023), ('Appt_Made_Hour', -0.021), ('visit_type_31', -0.018), ('Appt_Time_Hour', 0.013), ('visit_type_17', -0.013), ('visit_type_42', 0.013), ('provider_7', 0.011), ('visit_type_7', -0.011), ('visit_type_15', 0.01), ('Appt_Length', -0.007), ('duration_google', -0.006), ('visit_type_19', -0.005), ('Appt_Made_Min', -0.003), ('visit_type_27', -0.003), ('visit_type_38', -0.003), ('distance_google', -0.002), ('distance_bird', -0.002), ('Appt_Day', 0.002), ('Appt_Time_Min', 0.002), ('visit_type_24', -0.002), ('Appt_Made_Day', 0.001), ('age_bucket_2', 0.001), ('dept_14', -0.0), ('visit_type_14', 0.0), ('visit_type_29', 0.0)]
+
+----------Writing Results for __log_HISTORICAL__ ----------
+Accuracy Score:	0.8084958217270195
+Confusion Matrix:
+[[1137   15]
+ [ 260   24]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.81      0.99      0.89      1152
+          1       0.62      0.08      0.15       284
+
+avg / total       0.77      0.81      0.75      1436
+
+ROC AUC Score:	0.5357431044600938
+Coefficients:
+[('payor_type_0.0', 1.744), ('payor_type_1.0', -0.763), ('count_miss', 0.68), ('payor_type_4.0', -0.606), ('payor_type_2.0', -0.463), ('age_bucket_1', -0.289), ('age_bucket_0', 0.285), ('count_cancel', 0.284), ('visit_type_11', 0.229), ('age_bucket_4', 0.185), ('age_bucket_3', -0.183), ('appt_log_type_4', -0.163), ('visit_type_28', -0.16), ('diff_pay_count', -0.135), ('Made_Lead_Days_Work', -0.127), ('count_app', -0.126), ('visit_type_23', -0.1), ('Made_Lead_Days_Calendar', 0.093), ('appt_log_type_0', 0.089), ('payor_type_3.0', 0.088), ('PopDensity', -0.083), ('visit_type_12', 0.08), ('provider_73', -0.07), ('appt_log_type_1', 0.068), ('appt_log_type_2', 0.056), ('appt_log_type_3', -0.049), ('visit_type_16', 0.048), ('Appt_Month', 0.045), ('Appt_Made_Year', 0.04), ('visit_type_30', -0.04), ('provider_28', 0.032), ('Appt_Year', 0.031), ('provider_12', 0.027), ('Appt_Made_Month', -0.026), ('visit_type_9', -0.023), ('Appt_Made_Hour', -0.021), ('visit_type_31', -0.018), ('Appt_Time_Hour', 0.013), ('visit_type_17', -0.013), ('visit_type_42', 0.013), ('provider_7', 0.011), ('visit_type_7', -0.011), ('visit_type_15', 0.01), ('Appt_Length', -0.007), ('duration_google', -0.006), ('visit_type_19', -0.005), ('Appt_Made_Min', -0.003), ('visit_type_27', -0.003), ('visit_type_38', -0.003), ('distance_google', -0.002), ('distance_bird', -0.002), ('Appt_Day', 0.002), ('Appt_Time_Min', 0.002), ('visit_type_24', -0.002), ('Appt_Made_Day', 0.001), ('age_bucket_2', 0.001), ('dept_14', -0.0), ('visit_type_14', 0.0), ('visit_type_29', 0.0)]
+
+----------Writing Results for __log_NONHISTORICAL__ ----------
+Accuracy Score:	0.8964028776978418
+Confusion Matrix:
+[[616   2]
+ [ 70   7]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.90      1.00      0.94       618
+          1       0.78      0.09      0.16        77
+
+avg / total       0.88      0.90      0.86       695
+
+ROC AUC Score:	0.5438364224771992
+Coefficients:
+[('payor_type_0.0', 1.744), ('payor_type_1.0', -0.763), ('count_miss', 0.68), ('payor_type_4.0', -0.606), ('payor_type_2.0', -0.463), ('age_bucket_1', -0.289), ('age_bucket_0', 0.285), ('count_cancel', 0.284), ('visit_type_11', 0.229), ('age_bucket_4', 0.185), ('age_bucket_3', -0.183), ('appt_log_type_4', -0.163), ('visit_type_28', -0.16), ('diff_pay_count', -0.135), ('Made_Lead_Days_Work', -0.127), ('count_app', -0.126), ('visit_type_23', -0.1), ('Made_Lead_Days_Calendar', 0.093), ('appt_log_type_0', 0.089), ('payor_type_3.0', 0.088), ('PopDensity', -0.083), ('visit_type_12', 0.08), ('provider_73', -0.07), ('appt_log_type_1', 0.068), ('appt_log_type_2', 0.056), ('appt_log_type_3', -0.049), ('visit_type_16', 0.048), ('Appt_Month', 0.045), ('Appt_Made_Year', 0.04), ('visit_type_30', -0.04), ('provider_28', 0.032), ('Appt_Year', 0.031), ('provider_12', 0.027), ('Appt_Made_Month', -0.026), ('visit_type_9', -0.023), ('Appt_Made_Hour', -0.021), ('visit_type_31', -0.018), ('Appt_Time_Hour', 0.013), ('visit_type_17', -0.013), ('visit_type_42', 0.013), ('provider_7', 0.011), ('visit_type_7', -0.011), ('visit_type_15', 0.01), ('Appt_Length', -0.007), ('duration_google', -0.006), ('visit_type_19', -0.005), ('Appt_Made_Min', -0.003), ('visit_type_27', -0.003), ('visit_type_38', -0.003), ('distance_google', -0.002), ('distance_bird', -0.002), ('Appt_Day', 0.002), ('Appt_Time_Min', 0.002), ('visit_type_24', -0.002), ('Appt_Made_Day', 0.001), ('age_bucket_2', 0.001), ('dept_14', -0.0), ('visit_type_14', 0.0), ('visit_type_29', 0.0)]
+
+----------Writing Results for __dtree_ALL__ ----------
+Accuracy Score:	0.8230877522290004
+Confusion Matrix:
+[[1709   61]
+ [ 316   45]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.84      0.97      0.90      1770
+          1       0.42      0.12      0.19       361
+
+avg / total       0.77      0.82      0.78      2131
+
+ROC AUC Score:	0.5450952313880151
+
+
+----------Writing Results for __dtree_HISTORICAL__ ----------
+Accuracy Score:	0.8001392757660167
+Confusion Matrix:
+[[1113   39]
+ [ 248   36]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.82      0.97      0.89      1152
+          1       0.48      0.13      0.20       284
+
+avg / total       0.75      0.80      0.75      1436
+
+ROC AUC Score:	0.5464531983568075
+
+
+----------Writing Results for __dtree_NONHISTORICAL__ ----------
+Accuracy Score:	0.8705035971223022
+Confusion Matrix:
+[[596  22]
+ [ 68   9]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.90      0.96      0.93       618
+          1       0.29      0.12      0.17        77
+
+avg / total       0.83      0.87      0.85       695
+
+ROC AUC Score:	0.5406422056907493
+
+
+----------Writing Results for __rf_ALL__ ----------
+Accuracy Score:	0.8385734396996715
+Confusion Matrix:
+[[1764    6]
+ [ 338   23]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.84      1.00      0.91      1770
+          1       0.79      0.06      0.12       361
+
+avg / total       0.83      0.84      0.78      2131
+
+ROC AUC Score:	0.5301610404244331
+
+
+----------Writing Results for __rf_HISTORICAL__ ----------
+Accuracy Score:	0.8105849582172702
+Confusion Matrix:
+[[1149    3]
+ [ 269   15]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.81      1.00      0.89      1152
+          1       0.83      0.05      0.10       284
+
+avg / total       0.81      0.81      0.74      1436
+
+ROC AUC Score:	0.525106367370892
+
+
+----------Writing Results for __rf_NONHISTORICAL__ ----------
+Accuracy Score:	0.8964028776978418
+Confusion Matrix:
+[[615   3]
+ [ 69   8]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.90      1.00      0.94       618
+          1       0.73      0.10      0.18        77
+
+avg / total       0.88      0.90      0.86       695
+
+ROC AUC Score:	0.5495208674820325
+
+
+----------Writing Results for __logL1_ALL__ ----------
+Accuracy Score:	0.8334115438761145
+Confusion Matrix:
+[[1746   24]
+ [ 331   30]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.84      0.99      0.91      1770
+          1       0.56      0.08      0.14       361
+
+avg / total       0.79      0.83      0.78      2131
+
+ROC AUC Score:	0.534771585520447
+
+
+----------Writing Results for __logL1_HISTORICAL__ ----------
+Accuracy Score:	0.8043175487465181
+Confusion Matrix:
+[[1132   20]
+ [ 261   23]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.81      0.98      0.89      1152
+          1       0.53      0.08      0.14       284
+
+avg / total       0.76      0.80      0.74      1436
+
+ROC AUC Score:	0.5318124021909233
+
+
+----------Writing Results for __logL1_NONHISTORICAL__ ----------
+Accuracy Score:	0.8935251798561151
+Confusion Matrix:
+[[614   4]
+ [ 70   7]]
+Classification Report:
+             precision    recall  f1-score   support
+
+          0       0.90      0.99      0.94       618
+          1       0.64      0.09      0.16        77
+
+avg / total       0.87      0.89      0.86       695
+
+ROC AUC Score:	0.5422182994998528

@@ -1,0 +1,12 @@
+---This file was generate as a part of Senior Design by team 14 on 2018-11-07 14:29:25.293481 ---
+
+COMMAND LINE INPUT: 
+python NN_austin.py -test_size: 0.0, -one_hot: True, -group: historical, -no_cancel: True, -sample_type: None, -original: False, -office: all, -cv: 0, -clusters: 0
+Training Group:	HISTORICAL
+Number of Encounters: 71345
+Number of Patients: 24917
+Number of Features: 149
+Number of No Shows:	9365
+
+Feature Names:
+Appt_Length, Made_Lead_Days_Work, Made_Lead_Days_Calendar, Sibley_ID, PopDensity, distance_google, duration_google, distance_bird, No_Show, count_app, count_miss, count_cancel, diff_pay_count, Appt_Made_Year, Appt_Made_Month, Appt_Made_Day, Appt_Made_Hour, Appt_Made_Min, Appt_Year, Appt_Month, Appt_Day, Appt_Time_Hour, Appt_Time_Min, dept_1, dept_2, dept_3, dept_4, dept_5, dept_6, dept_7, dept_8, dept_9, dept_11, dept_12, dept_13, dept_14, dept_15, dept_16, dept_17, dept_18, dept_19, dept_20, dept_21, dept_22, dept_23, dept_24, dept_26, dept_27, provider_1, provider_6, provider_7, provider_8, provider_9, provider_10, provider_12, provider_14, provider_19, provider_20, provider_22, provider_23, provider_25, provider_26, provider_28, provider_30, provider_31, provider_32, provider_35, provider_36, provider_37, provider_38, provider_39, provider_42, provider_44, provider_45, provider_47, provider_48, provider_49, provider_50, provider_52, provider_53, provider_55, provider_56, provider_57, provider_61, provider_62, provider_63, provider_65, provider_66, provider_68, provider_69, provider_73, provider_76, provider_77, provider_78, provider_80, provider_81, provider_82, provider_83, provider_84, provider_85, provider_86, provider_89, appt_log_type_0, appt_log_type_1, appt_log_type_2, appt_log_type_3, appt_log_type_4, visit_type_1, visit_type_2, visit_type_3, visit_type_4, visit_type_7, visit_type_8, visit_type_9, visit_type_11, visit_type_12, visit_type_14, visit_type_15, visit_type_16, visit_type_17, visit_type_19, visit_type_20, visit_type_21, visit_type_22, visit_type_23, visit_type_24, visit_type_26, visit_type_27, visit_type_28, visit_type_29, visit_type_30, visit_type_31, visit_type_32, visit_type_36, visit_type_38, visit_type_39, visit_type_40, visit_type_42, age_bucket_0, age_bucket_1, age_bucket_2, age_bucket_3, age_bucket_4, payor_type_0.0, payor_type_1.0, payor_type_2.0, payor_type_3.0, payor_type_4.0, count

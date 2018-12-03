@@ -11,12 +11,14 @@ def gen_chi2(X, y, one_hot='True'):
 
 	scores, p_values = chi2(X, y)
 
+	print(scores, p_values)
+
 	X_new = SelectKBest(chi2, k=10).fit_transform(X, y)
 
 	X_t = X.columns.T
-	#results = pd.DataFrame( [scores, p_values], index = X.columns)
-	results = pd.DataFrame([X.columns, scores, p_values])
-	results = results.T
+	results = pd.DataFrame( list(zip(scores, p_values)), index = list(X.columns))
+	# results = pd.DataFrame([X.columns, scores, p_values])
+	#results = results.T
 	results.to_csv('feature_p_one_hot_{}.csv'.format(one_hot))
 
 	print(X.columns)

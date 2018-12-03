@@ -1,0 +1,32 @@
+digraph Tree {
+node [shape=box] ;
+0 [label="count_miss <= 0.5\nentropy = 0.684\nsamples = 7319\nvalue = [5988, 1331]"] ;
+1 [label="Made_Lead_Days_Calendar <= 178.5\nentropy = 0.619\nsamples = 5824\nvalue = [4930, 894]"] ;
+0 -> 1 [labeldistance=2.5, labelangle=45, headlabel="True"] ;
+2 [label="visit_type_15 <= 0.5\nentropy = 0.58\nsamples = 5243\nvalue = [4517, 726]"] ;
+1 -> 2 ;
+3 [label="entropy = 0.743\nsamples = 1626\nvalue = [1283, 343]"] ;
+2 -> 3 ;
+4 [label="entropy = 0.487\nsamples = 3617\nvalue = [3234, 383]"] ;
+2 -> 4 ;
+5 [label="duration_google <= 0.005\nentropy = 0.868\nsamples = 581\nvalue = [413, 168]"] ;
+1 -> 5 ;
+6 [label="entropy = 0.997\nsamples = 58\nvalue = [27, 31]"] ;
+5 -> 6 ;
+7 [label="entropy = 0.83\nsamples = 523\nvalue = [386, 137]"] ;
+5 -> 7 ;
+8 [label="Made_Lead_Days_Calendar <= 18.5\nentropy = 0.872\nsamples = 1495\nvalue = [1058, 437]"] ;
+0 -> 8 [labeldistance=2.5, labelangle=-45, headlabel="False"] ;
+9 [label="Made_Lead_Days_Calendar <= 1.5\nentropy = 0.785\nsamples = 978\nvalue = [749, 229]"] ;
+8 -> 9 ;
+10 [label="entropy = 0.472\nsamples = 119\nvalue = [107, 12]"] ;
+9 -> 10 ;
+11 [label="entropy = 0.815\nsamples = 859\nvalue = [642, 217]"] ;
+9 -> 11 ;
+12 [label="count_miss <= 1.5\nentropy = 0.972\nsamples = 517\nvalue = [309, 208]"] ;
+8 -> 12 ;
+13 [label="entropy = 0.932\nsamples = 365\nvalue = [238, 127]"] ;
+12 -> 13 ;
+14 [label="entropy = 0.997\nsamples = 152\nvalue = [71, 81]"] ;
+12 -> 14 ;
+}

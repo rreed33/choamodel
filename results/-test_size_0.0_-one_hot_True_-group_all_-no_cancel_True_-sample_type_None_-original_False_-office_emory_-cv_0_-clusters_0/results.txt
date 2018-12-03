@@ -1,0 +1,12 @@
+---This file was generate as a part of Senior Design by team 14 on 2018-11-14 11:49:56.109161 ---
+
+COMMAND LINE INPUT: 
+python NN_austin.py -test_size: 0.0, -one_hot: True, -group: all, -no_cancel: True, -sample_type: None, -original: False, -office: emory, -cv: 0, -clusters: 0
+Training Group:	ALL
+Number of Encounters: 9557
+Number of Patients: 5843
+Number of Features: 72
+Number of No Shows:	1365
+
+Feature Names:
+Appt_Length, Made_Lead_Days_Work, Made_Lead_Days_Calendar, Sibley_ID, PopDensity, distance_google, duration_google, distance_bird, No_Show, count_app, count_miss, count_cancel, diff_pay_count, Appt_Made_Year, Appt_Made_Month, Appt_Made_Day, Appt_Made_Hour, Appt_Made_Min, Appt_Year, Appt_Month, Appt_Day, Appt_Time_Hour, Appt_Time_Min, dept_9, provider_1, provider_8, provider_10, provider_14, provider_25, provider_36, provider_37, provider_42, provider_44, provider_47, provider_49, provider_50, provider_52, provider_57, provider_62, provider_63, provider_66, provider_69, provider_76, provider_86, appt_log_type_0, appt_log_type_1, appt_log_type_2, appt_log_type_3, appt_log_type_4, visit_type_7, visit_type_15, visit_type_16, visit_type_17, visit_type_23, visit_type_24, visit_type_27, visit_type_28, visit_type_29, visit_type_30, visit_type_31, visit_type_38, visit_type_42, age_bucket_1, age_bucket_2, age_bucket_3, age_bucket_4, payor_type_0.0, payor_type_1.0, payor_type_2.0, payor_type_3.0, payor_type_4.0, count
